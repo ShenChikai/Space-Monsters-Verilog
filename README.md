@@ -14,3 +14,6 @@ The game is inspired by the classic arcade game "Space Invaders." The game invol
 - Pause - Allow users to pause with a button press, another press to resume
 - Different levels - 2+ levels with increasing difficulty (# of monsters and frequency of monster bullets)
 - Moving monsters
+
+# State Machine
+![state machine v0](/assets/state_machine_v0.png)
