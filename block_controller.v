@@ -20,14 +20,15 @@ module block_controller(
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
     	if(~bright )	//force black if not inside the display area
+			rgb = 12'b1111_1111_1111;
+		else if (tank_body || tank_head)
 			rgb = 12'b0000_0000_0000;
-		else if (block_fill) 
-			rgb = RED; 
-		else	
+		else
 			rgb=background;
 	end
 		//the +-5 for the positions give the dimension of the block (i.e. it will be 10x10 pixels)
-	assign block_fill=vCount>=(ypos-5) && vCount<=(ypos+5) && hCount>=(xpos-5) && hCount<=(xpos+5);
+	assign tank_body =vCount>=(ypos) && vCount<=(ypos+5) && hCount>=(xpos-7) && hCount<=(xpos+7);
+	assign tank_head =vCount>=(ypos+5) && vCount<=(ypos+8) && hCount>=(xpos-2) && hCount<=(xpos+2);
 	
 	always@(posedge clk, posedge rst) 
 	begin
@@ -35,7 +36,7 @@ module block_controller(
 		begin 
 			//rough values for center of screen
 			xpos<=450;
-			ypos<=250;
+			ypos<=515;
 		end
 		else if (clk) begin
 		
