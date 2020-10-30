@@ -4,65 +4,174 @@ module block_controller(
 	input clk, //this clock must be a slow enough clock to view the changing positions of the objects
 	input bright,
 	input rst,
-	input left, input right,
+	input left, input right, input up,
 	input [9:0] hCount, vCount,
 	output reg [11:0] rgb,
 	output reg [11:0] background
    );
-	wire block_fill;
+	wire tank_body, tank_head;
+	wire monster_0, monster_1, monster_2, monster_3, monster_4;
 	
 	//these two values dictate the center of the block, incrementing and decrementing them leads the block to move in certain directions
-	reg [9:0] xpos, ypos;
+	reg [9:0] xpos_tank, ypos_tank;
+	// 10 monsters
+	reg [9:0] xpos_mons_0, ypos_mons_0;
+	reg [9:0] xpos_mons_1, ypos_mons_1;
+	reg [9:0] xpos_mons_2, ypos_mons_2;
+	reg [9:0] xpos_mons_3, ypos_mons_3;
+	reg [9:0] xpos_mons_4, ypos_mons_4;
+	//reg [9:0] xpos_mons_5, ypos_mons_5;
+	//reg [9:0] xpos_mons_6, ypos_mons_6;
+	//reg [9:0] xpos_mons_7, ypos_mons_7;
+	//reg [9:0] xpos_mons_8, ypos_mons_8;
+	//reg [9:0] xpos_mons_9, ypos_mons_9;
 	
+	parameter BLACK = 12'b1111_1111_1111;
 	parameter RED   = 12'b1111_0000_0000;
+	parameter GREEN = 12'b0000_1111_0000;
+	parameter BLUE 	= 12'b0000_0000_1111;
+	parameter PURPLE= 12'b1111_0000_1111;
 	
 	/*when outputting the rgb value in an always block like this, make sure to include the if(~bright) statement, as this ensures the monitor 
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
     	if(~bright )	//force black if not inside the display area
-			rgb = 12'b1111_1111_1111;
-		else if (tank_body || tank_head)
-			rgb = 12'b0000_0000_0000;
+			rgb = BLACK;
+		else if (tank_body)
+			rgb = GREEN;
+		else if (tank_head)
+			rgb = GREEN;
+		else if (monster_0)
+			rgb = RED;
+		else if (monster_1)
+			rgb = RED;
+		else if (monster_2)
+			rgb = RED;
+		else if (monster_3)
+			rgb = RED;
+		else if (monster_4)
+			rgb = RED;
 		else
-			rgb=background;
+			rgb = background;
 	end
-		//the +-5 for the positions give the dimension of the block (i.e. it will be 10x10 pixels)
-	assign tank_body =vCount>=(ypos) && vCount<=(ypos+5) && hCount>=(xpos-7) && hCount<=(xpos+7);
-	assign tank_head =vCount>=(ypos+5) && vCount<=(ypos+8) && hCount>=(xpos-2) && hCount<=(xpos+2);
 	
+	// draw tank
+	assign tank_body =vCount>=(ypos_tank) && vCount<=(ypos_tank+5) && hCount>=(xpos_tank-7) && hCount<=(xpos_tank+7);
+	assign tank_head =vCount>=(ypos_tank+5) && vCount<=(ypos_tank+8) && hCount>=(xpos_tank-2) && hCount<=(xpos_tank+2);
+	// draw monsters
+	assign monster_0 =vCount>=(ypos_mons_0 -2) && vCount<=(ypos_mons_0 +2) && hCount>=(xpos_mons_0 -5) && hCount<=(xpos_mons_0 +5);
+	assign monster_1 =vCount>=(ypos_mons_1 -2) && vCount<=(ypos_mons_1 +2) && hCount>=(xpos_mons_1 -5) && hCount<=(xpos_mons_1 +5);
+	assign monster_2 =vCount>=(ypos_mons_2 -2) && vCount<=(ypos_mons_2 +2) && hCount>=(xpos_mons_2 -5) && hCount<=(xpos_mons_2 +5);
+	assign monster_3 =vCount>=(ypos_mons_3 -2) && vCount<=(ypos_mons_3 +2) && hCount>=(xpos_mons_3 -5) && hCount<=(xpos_mons_3 +5);
+	assign monster_4 =vCount>=(ypos_mons_4 -2) && vCount<=(ypos_mons_4 +2) && hCount>=(xpos_mons_4 -5) && hCount<=(xpos_mons_4 +5);
+	
+	// tank state block
 	always@(posedge clk, posedge rst) 
 	begin
 		if(rst)
-		begin 
+		begin
 			//rough values for center of screen
-			xpos<=450;
-			ypos<=515;
+			xpos_tank<=450;
+			ypos_tank<=550;
 		end
 		else if (clk) begin
-		
-		/* Note that the top left of the screen does NOT correlate to vCount=0 and hCount=0. The display_controller.v file has the 
-			synchronizing pulses for both the horizontal sync and the vertical sync begin at vcount=0 and hcount=0. Recall that after 
-			the length of the pulse, there is also a short period called the back porch before the display area begins. So effectively, 
-			the top left corner corresponds to (hcount,vcount)~(144,35). Which means with a 640x480 resolution, the bottom right corner 
-			corresponds to ~(783,515).  
-		*/
+			// shoot
+			if (up) begin
+				
+			end
+			// move left/right
 			if(right) begin
-				xpos<=xpos+2; //change the amount you increment to make the speed faster 
-				if(xpos==800) //these are rough values to attempt looping around, you can fine-tune them to make it more accurate- refer to the block comment above
-					xpos<=150;
+				xpos_tank<=xpos_tank+2; //change the amount you increment to make the speed faster 
+				if(xpos_tank==800) //these are rough values to attempt looping around, you can fine-tune them to make it more accurate- refer to the block comment above
+					xpos_tank<=150;
 			end
 			else if(left) begin
-				xpos<=xpos-2;
-				if(xpos==150)
-					xpos<=800;
+				xpos_tank<=xpos_tank-2;
+				if(xpos_tank==150)
+					xpos_tank<=800;
 			end
+		end
+	end
+	
+	// monster_0 state block
+	always@(posedge clk, posedge rst) 
+	begin
+		if(rst)
+		begin
+			//rough values for center of screen
+			xpos_mons_0<=250;
+			ypos_mons_0<=100;
+		end
+		
+		else if (clk) begin
+			// shoot
+		end
+	end
+	
+	// monster_1 state block
+	always@(posedge clk, posedge rst) 
+	begin
+		if(rst)
+		begin
+			//rough values for center of screen
+			xpos_mons_1<=350;
+			ypos_mons_1<=100;
+		end
+		
+		else if (clk) begin
+			// shoot
+		end
+	end
+	
+	// monster_2 state block
+	always@(posedge clk, posedge rst) 
+	begin
+		if(rst)
+		begin
+			//rough values for center of screen
+			xpos_mons_2<=450;
+			ypos_mons_2<=100;
+		end
+		
+		else if (clk) begin
+			// shoot
+		end
+	end
+	
+	// monster_3 state block
+	always@(posedge clk, posedge rst) 
+	begin
+		if(rst)
+		begin
+			//rough values for center of screen
+			xpos_mons_3<=550;
+			ypos_mons_3<=100;
+		end
+		
+		else if (clk) begin
+			// shoot
+		end
+	end
+	
+	// monster_4 state block
+	always@(posedge clk, posedge rst) 
+	begin
+		if(rst)
+		begin
+			//rough values for center of screen
+			xpos_mons_4<=650;
+			ypos_mons_4<=100;
+		end
+		
+		else if (clk) begin
+			// shoot
 		end
 	end
 	
 	//the background color reflects the most recent button press
 	always@(posedge clk, posedge rst) begin
 		if(rst)
-			background <= 12'b1111_1111_1111;
+			background <= PURPLE;
 			
 	end
 
