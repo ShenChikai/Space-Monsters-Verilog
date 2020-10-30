@@ -10,6 +10,7 @@ The game is inspired by the classic arcade game "Space Invaders." The game invol
 
 # Possible additional features
 - Bullet mode - press to fire, or press once to fire, another press to hold fire
+- Score in SSD
 - Pause - Allow users to pause with a button press, another press to resume
 - Different levels - 2+ levels with increasing difficulty (# of monsters and frequency of monster bullets)
 - Moving monsters
