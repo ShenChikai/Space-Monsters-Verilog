@@ -37,10 +37,10 @@ module block_controller(
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
     	if(~bright)	//force black if not inside the display area
-			rgb = 12'b0000_1111_1111;
-		else if (tank_body)
-			rgb = GREEN;
+			rgb = 12'b0000_0000_0000;
 		else if (tank_head)
+			rgb = GREEN;
+		else if (tank_body)
 			rgb = GREEN;
 		else if (monster_0)
 			rgb = RED;
@@ -57,8 +57,8 @@ module block_controller(
 	end
 	
 	// draw tank
-	assign tank_body =vCount>=(ypos_tank) && vCount<=(ypos_tank+5) && hCount>=(xpos_tank-7) && hCount<=(xpos_tank+7);
-	assign tank_head =vCount>=(ypos_tank+5) && vCount<=(ypos_tank+8) && hCount>=(xpos_tank-2) && hCount<=(xpos_tank+2);
+	assign tank_head =vCount>=(ypos_tank-5) && vCount< (ypos_tank) && hCount>=(xpos_tank-2) && hCount<=(xpos_tank+2);
+	assign tank_body =vCount>=(ypos_tank) && vCount<=(ypos_tank+10) && hCount>=(xpos_tank-10) && hCount<=(xpos_tank+10);
 	// draw monsters
 	assign monster_0 =vCount>=(ypos_mons_0 -3) && vCount<=(ypos_mons_0 +3) && hCount>=(xpos_mons_0 -5) && hCount<=(xpos_mons_0 +5);
 	assign monster_1 =vCount>=(ypos_mons_1 -3) && vCount<=(ypos_mons_1 +3) && hCount>=(xpos_mons_1 -5) && hCount<=(xpos_mons_1 +5);
@@ -73,7 +73,7 @@ module block_controller(
 		begin
 			//rough values for center of screen
 			xpos_tank<=450;
-			ypos_tank<=550;
+			ypos_tank<=450;
 		end
 		else if (clk) begin
 			// shoot
@@ -81,7 +81,7 @@ module block_controller(
 				
 			end
 			// move left/right
-			if(right) begin
+			else if(right) begin
 				xpos_tank<=xpos_tank+2; //change the amount you increment to make the speed faster 
 				if(xpos_tank==800) //these are rough values to attempt looping around, you can fine-tune them to make it more accurate- refer to the block comment above
 					xpos_tank<=150;
@@ -172,7 +172,7 @@ module block_controller(
 		//the background color reflects the most recent button press
 	always@(posedge clk, posedge rst) begin
 		if(rst)
-			background <= 12'b1111_1111_1111;
+			background <= PURPLE;
 
 	end
 	
