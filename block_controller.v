@@ -31,12 +31,13 @@ module block_controller(
 	parameter GREEN = 12'b0000_1111_0000;
 	parameter BLUE 	= 12'b0000_0000_1111;
 	parameter PURPLE= 12'b1111_0000_1111;
+	parameter CYAN  = 12'b0000_1111_1111;
 	
 	/*when outputting the rgb value in an always block like this, make sure to include the if(~bright) statement, as this ensures the monitor 
 	will output some data to every pixel and not just the images you are trying to display*/
 	always@ (*) begin
-    	if(~bright )	//force black if not inside the display area
-			rgb = BLACK;
+    	if(~bright)	//force black if not inside the display area
+			rgb = 12'b0000_1111_1111;
 		else if (tank_body)
 			rgb = GREEN;
 		else if (tank_head)
@@ -59,11 +60,11 @@ module block_controller(
 	assign tank_body =vCount>=(ypos_tank) && vCount<=(ypos_tank+5) && hCount>=(xpos_tank-7) && hCount<=(xpos_tank+7);
 	assign tank_head =vCount>=(ypos_tank+5) && vCount<=(ypos_tank+8) && hCount>=(xpos_tank-2) && hCount<=(xpos_tank+2);
 	// draw monsters
-	assign monster_0 =vCount>=(ypos_mons_0 -2) && vCount<=(ypos_mons_0 +2) && hCount>=(xpos_mons_0 -5) && hCount<=(xpos_mons_0 +5);
-	assign monster_1 =vCount>=(ypos_mons_1 -2) && vCount<=(ypos_mons_1 +2) && hCount>=(xpos_mons_1 -5) && hCount<=(xpos_mons_1 +5);
-	assign monster_2 =vCount>=(ypos_mons_2 -2) && vCount<=(ypos_mons_2 +2) && hCount>=(xpos_mons_2 -5) && hCount<=(xpos_mons_2 +5);
-	assign monster_3 =vCount>=(ypos_mons_3 -2) && vCount<=(ypos_mons_3 +2) && hCount>=(xpos_mons_3 -5) && hCount<=(xpos_mons_3 +5);
-	assign monster_4 =vCount>=(ypos_mons_4 -2) && vCount<=(ypos_mons_4 +2) && hCount>=(xpos_mons_4 -5) && hCount<=(xpos_mons_4 +5);
+	assign monster_0 =vCount>=(ypos_mons_0 -3) && vCount<=(ypos_mons_0 +3) && hCount>=(xpos_mons_0 -5) && hCount<=(xpos_mons_0 +5);
+	assign monster_1 =vCount>=(ypos_mons_1 -3) && vCount<=(ypos_mons_1 +3) && hCount>=(xpos_mons_1 -5) && hCount<=(xpos_mons_1 +5);
+	assign monster_2 =vCount>=(ypos_mons_2 -3) && vCount<=(ypos_mons_2 +3) && hCount>=(xpos_mons_2 -5) && hCount<=(xpos_mons_2 +5);
+	assign monster_3 =vCount>=(ypos_mons_3 -3) && vCount<=(ypos_mons_3 +3) && hCount>=(xpos_mons_3 -5) && hCount<=(xpos_mons_3 +5);
+	assign monster_4 =vCount>=(ypos_mons_4 -3) && vCount<=(ypos_mons_4 +3) && hCount>=(xpos_mons_4 -5) && hCount<=(xpos_mons_4 +5);
 	
 	// tank state block
 	always@(posedge clk, posedge rst) 
@@ -167,14 +168,12 @@ module block_controller(
 			// shoot
 		end
 	end
-	
-	//the background color reflects the most recent button press
+
+		//the background color reflects the most recent button press
 	always@(posedge clk, posedge rst) begin
 		if(rst)
-			background <= PURPLE;
-			
-	end
+			background <= 12'b1111_1111_1111;
 
-	
+	end
 	
 endmodule
