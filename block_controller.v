@@ -55,6 +55,8 @@ module block_controller(
 		else
 			rgb = background;
 	end
+
+	tank TANK(clk, rst, left, right, up, xpos_tank, ypos_tank);
 	
 	// draw tank
 	assign tank_head =vCount>=(ypos_tank-5) && vCount< (ypos_tank) && hCount>=(xpos_tank-2) && hCount<=(xpos_tank+2);
@@ -67,7 +69,7 @@ module block_controller(
 	assign monster_4 =vCount>=(ypos_mons_4 -3) && vCount<=(ypos_mons_4 +3) && hCount>=(xpos_mons_4 -5) && hCount<=(xpos_mons_4 +5);
 	
 	// tank state block
-	always@(posedge clk, posedge rst) 
+/* 	always@(posedge clk, posedge rst) 
 	begin
 		if(rst)
 		begin
@@ -92,7 +94,7 @@ module block_controller(
 					xpos_tank<=800;
 			end
 		end
-	end
+	end */
 	
 	// monster_0 state block
 	always@(posedge clk, posedge rst) 
