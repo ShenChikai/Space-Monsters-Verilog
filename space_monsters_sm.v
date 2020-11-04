@@ -3,7 +3,7 @@
 
 module space_monsters_sm(
     clk, bright, rst, left, right, up, Ack, hCount, vCount,
-    rgb, background, score, q_Start, q_L1I, q_L1, q_Success, q_Failed
+    rgb, background, score
 );
     /** INPUTS  **/
     input clk, bright, rst;
@@ -16,7 +16,7 @@ module space_monsters_sm(
     output reg [11:0] rgb;
     output reg [11:0] background;
     output [7:0] score;
-    output q_Start, q_L1I, q_L1, q_Success, q_Failed;
+    reg q_Start, q_L1I, q_L1, q_Success, q_Failed;
     reg [4:0] state;
     assign {q_Failed, q_Success, q_L1, q_L1I, q_Start} = state;
 
