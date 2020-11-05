@@ -76,8 +76,12 @@ module block_controller(
 	parameter PINK  = 12'b1111_1100_1100;
 	
 	always@ (*) begin
-    	if(~bright)	//force black if not inside the display area
+		if(~bright)	//force black if not inside the display area
 			rgb = 12'b0000_0000_0000;
+		else if (monster_destroyed == 5'b11111)
+			rgb = CYAN;
+		else if (tank_destroyed)
+			rgb = RED;
 		else if (tank_bullet_0)
 			rgb = BLUE;
 		else if (tank_bullet_1)
@@ -170,15 +174,6 @@ module block_controller(
 	//Debounce all btn press here
 	ee201_debouncer(clk, rst, up, DPB, SCEN, MCEN, CCEN);
 	
-	// initialize bg, flags 
-	always@(posedge rst)  begin
-		if (rst)
-		begin
-			background <= BLACK;
-			tank_destroyed = 0;					// TODO: check tank collision	还没�?�的 先放这
-		end
-	end
-	
 	// ---------------------------------------------------------------------------------------Tank-------------------------------------------------------------------------------------------------
 	
 	// tank state block: left, right, shoot
@@ -186,6 +181,8 @@ module block_controller(
 	begin
 		if(rst)
 		begin
+			// bg color
+			background <= BLACK;
 			// rough values for center of screen
 			xpos_tank<=450;
 			ypos_tank<=450;
@@ -195,15 +192,15 @@ module block_controller(
 			xpos_tank_bullet_0<=1000;
 			xpos_tank_bullet_1<=1000;
 			xpos_tank_bullet_2<=1000;
-			
+			// reset destory flag
 			monster_destroyed <= 5'b00000;
+			tank_destroyed <= 0;
 		end
 		
 		else if (clk) 
 		begin
 			// shoot when debounced up, activate bullet
-			if (SCEN) begin					//TODO: test pulse_up
-				ypos_tank<=ypos_tank-1;
+			if (SCEN) begin
 				if (tank_bullet_alive[0] == 1'b0) begin			// set bullet0 alive (=1)
 					tank_bullet_alive[0] <= 1'b1;
 					xpos_tank_bullet_0 <= xpos_tank;
@@ -235,7 +232,7 @@ module block_controller(
 				end
 			end
 
-			//check if bullet0 hits monster
+			//----------------------------------------------------------------------------Check_Hit_Monsters--------------------------------------------------------------------------------------------
 			if(tank_bullet_alive[0])
 			begin
 				//hit mons0
@@ -355,7 +352,138 @@ module block_controller(
 				end
 			end
 			
-			// IF tank bullets reached top of screen (range from 32-33), reset bullet to available (=0)
+			//----------------------------------------------------------------------------Check_Hit_Tank--------------------------------------------------------------------------------------------
+			//check if bullets from monster_0 hits tank
+			if(mons_0_bullet_alive[0])
+			begin
+				//hit tank
+				if( (xpos_mons_0_bullet_0 <= xpos_tank+10) && (xpos_mons_0_bullet_0 >= xpos_tank-10) && (ypos_mons_0_bullet_0 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_0_bullet_alive[1])
+			begin
+				//hit tank
+				if( (xpos_mons_0_bullet_1 <= xpos_tank+10) && (xpos_mons_0_bullet_1 >= xpos_tank-10) && (ypos_mons_0_bullet_1 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_0_bullet_alive[2])
+			begin
+				//hit tank
+				if( (xpos_mons_0_bullet_2 <= xpos_tank+10) && (xpos_mons_0_bullet_2 >= xpos_tank-10) && (ypos_mons_0_bullet_2 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			
+			//check if bullets from monster_1 hits tank
+			if(mons_1_bullet_alive[0])
+			begin
+				//hit tank
+				if( (xpos_mons_1_bullet_0 <= xpos_tank+10) && (xpos_mons_1_bullet_0 >= xpos_tank-10) && (ypos_mons_1_bullet_0 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_1_bullet_alive[1])
+			begin
+				//hit tank
+				if( (xpos_mons_1_bullet_1 <= xpos_tank+10) && (xpos_mons_1_bullet_1 >= xpos_tank-10) && (ypos_mons_1_bullet_1 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_1_bullet_alive[2])
+			begin
+				//hit tank
+				if( (xpos_mons_1_bullet_2 <= xpos_tank+10) && (xpos_mons_1_bullet_2 >= xpos_tank-10) && (ypos_mons_1_bullet_2 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			
+			//check if bullets from monster_2 hits tank
+			if(mons_2_bullet_alive[0])
+			begin
+				//hit tank
+				if( (xpos_mons_2_bullet_0 <= xpos_tank+10) && (xpos_mons_2_bullet_0 >= xpos_tank-10) && (ypos_mons_2_bullet_0 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_2_bullet_alive[1])
+			begin
+				//hit tank
+				if( (xpos_mons_2_bullet_1 <= xpos_tank+10) && (xpos_mons_2_bullet_1 >= xpos_tank-10) && (ypos_mons_2_bullet_1 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_2_bullet_alive[2])
+			begin
+				//hit tank
+				if( (xpos_mons_2_bullet_2 <= xpos_tank+10) && (xpos_mons_2_bullet_2 >= xpos_tank-10) && (ypos_mons_2_bullet_2 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			
+			//check if bullets from monster_3 hits tank
+			if(mons_3_bullet_alive[0])
+			begin
+				//hit tank
+				if( (xpos_mons_3_bullet_0 <= xpos_tank+10) && (xpos_mons_3_bullet_0 >= xpos_tank-10) && (ypos_mons_3_bullet_0 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_3_bullet_alive[1])
+			begin
+				//hit tank
+				if( (xpos_mons_3_bullet_1 <= xpos_tank+10) && (xpos_mons_3_bullet_1 >= xpos_tank-10) && (ypos_mons_3_bullet_1 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_3_bullet_alive[2])
+			begin
+				//hit tank
+				if( (xpos_mons_3_bullet_2 <= xpos_tank+10) && (xpos_mons_3_bullet_2 >= xpos_tank-10) && (ypos_mons_3_bullet_2 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			
+			//check if bullets from monster_3 hits tank
+			if(mons_3_bullet_alive[0])
+			begin
+				//hit tank
+				if( (xpos_mons_3_bullet_0 <= xpos_tank+10) && (xpos_mons_3_bullet_0 >= xpos_tank-10) && (ypos_mons_3_bullet_0 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_3_bullet_alive[1])
+			begin
+				//hit tank
+				if( (xpos_mons_3_bullet_1 <= xpos_tank+10) && (xpos_mons_3_bullet_1 >= xpos_tank-10) && (ypos_mons_3_bullet_1 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			if(mons_3_bullet_alive[2])
+			begin
+				//hit tank
+				if( (xpos_mons_4_bullet_2 <= xpos_tank+10) && (xpos_mons_4_bullet_2 >= xpos_tank-10) && (ypos_mons_4_bullet_2 == ypos_tank))
+				begin
+					tank_destroyed <= 1;
+				end
+			end
+			
+			// IF tank bullets reached top of screen (range from 32-33), reset bullet to available (=0)-----------------------------------------------------------------------------------------------
 			if((ypos_tank_bullet_0>=32) && (ypos_tank_bullet_0<=33)) begin
 				tank_bullet_alive[0] <= 1'b0;
 				xpos_tank_bullet_0<=1000;
