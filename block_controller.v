@@ -168,8 +168,7 @@ module block_controller(
 	assign monster_4_bullet_2 =vCount>=(ypos_mons_4_bullet_2 -1) && vCount<=(ypos_mons_4_bullet_2 +1) && hCount>=(xpos_mons_4_bullet_2 -1) && hCount<=(xpos_mons_4_bullet_2 +1);
 	
 	//Debounce all btn press here
-	debounce DUP(rst, clk, up, clean_up);
-	pulse PULSE_UP(rst, clk, clean_up, pulse_up);
+	ee201_debouncer(clk, rst, up, DPB, SCEN, MCEN, CCEN);
 	
 	// initialize bg, flags 
 	always@(posedge rst)  begin
@@ -177,26 +176,10 @@ module block_controller(
 		begin
 			background <= BLACK;
 			tank_destroyed = 0;					// TODO: check tank collision	还没�?�的 先放这
-			monster_destroyed = 5'b00000;	
-		end	// TODO: check mons collision
+		end
 	end
 	
 	// ---------------------------------------------------------------------------------------Tank-------------------------------------------------------------------------------------------------
-	// button up Debounce
-	// Update register to the btn state now and 1 cycle ago (compare now & before)
-	/* always@(posedge clk, posedge rst) 
-	begin
-		if (rst) begin
-			upState <= 2'b00;
-		end
-		else if (clk) begin
-			if (up) begin
-				upState <= {upState[0], 1'b1};
-			end
-		end
-	end
-	// If we see a edge now, but didnt 1 cycle ago, pulse
-	assign debounced_up = ~upState[1] & upState[0]; */
 	
 	// tank state block: left, right, shoot
 	always@(posedge clk, posedge rst) 
@@ -209,15 +192,18 @@ module block_controller(
 			// tank_bullet_alive & xpos of bullet can be assigned in tank blcok
 			// and only ypos of bullet can only be assigned in corresponding bullet block
 			tank_bullet_alive <= 3'b000;
-			xpos_tank_bullet_0<=10'bXXXXXXXXX;
-			xpos_tank_bullet_1<=10'bXXXXXXXXX;
-			xpos_tank_bullet_2<=10'bXXXXXXXXX;
+			xpos_tank_bullet_0<=1000;
+			xpos_tank_bullet_1<=1000;
+			xpos_tank_bullet_2<=1000;
+			
+			monster_destroyed <= 5'b00000;
 		end
 		
 		else if (clk) 
 		begin
 			// shoot when debounced up, activate bullet
-			if (pulse_up) begin					//TODO: test pulse_up
+			if (SCEN) begin					//TODO: test pulse_up
+				ypos_tank<=ypos_tank-1;
 				if (tank_bullet_alive[0] == 1'b0) begin			// set bullet0 alive (=1)
 					tank_bullet_alive[0] <= 1'b1;
 					xpos_tank_bullet_0 <= xpos_tank;
@@ -236,14 +222,6 @@ module block_controller(
 			// move tank left/right 
 			else if(right) begin
 				xpos_tank<=xpos_tank+2; 
-				// (Also updating bullets position with tank IF not alive)
-/* 				if(tank_bullet_alive[0] == 1'b0)
-					xpos_tank_bullet_0<=xpos_tank+2;
-				if(tank_bullet_alive[1] == 1'b0)
-					xpos_tank_bullet_1<=xpos_tank+2;
-				if(tank_bullet_alive[2] == 1'b0)
-					xpos_tank_bullet_2<=xpos_tank+2; */
-					
 				// wrap around
 				if(xpos_tank==800) begin
 					xpos_tank<=150;
@@ -251,22 +229,9 @@ module block_controller(
 			end
 			else if(left) begin
 				xpos_tank<=xpos_tank-2;
-				// (Also updating bullets position with tank IF not alive)
-/* 				if(tank_bullet_alive[0] == 1'b0)
-					xpos_tank_bullet_0<=xpos_tank-2;
-				if(tank_bullet_alive[1] == 1'b0)
-					xpos_tank_bullet_1<=xpos_tank-2;
-				if(tank_bullet_alive[2] == 1'b0)
-					xpos_tank_bullet_2<=xpos_tank-2; */
-					
+				// wrap around
 				if(xpos_tank==150) begin
 					xpos_tank<=800;
-					if(tank_bullet_alive[0] == 1'b0)
-						xpos_tank_bullet_0<=800;
-					if(tank_bullet_alive[1] == 1'b0)
-						xpos_tank_bullet_1<=800;
-					if(tank_bullet_alive[2] == 1'b0)
-						xpos_tank_bullet_2<=800;
 				end
 			end
 
@@ -278,35 +243,35 @@ module block_controller(
 				begin
 					monster_destroyed[0] = 1;
 					tank_bullet_alive[0] <= 1'b0;
-					xpos_tank_bullet_0<=10'bXXXXXXXXX;
+					xpos_tank_bullet_0<=1000;
 				end
 				//hit mons1
 				if( (xpos_tank_bullet_0 <= xpos_mons_1+10) && (xpos_tank_bullet_0 >= xpos_mons_1-10)  && (ypos_tank_bullet_0 == ypos_mons_1))
 				begin
 					monster_destroyed[1] = 1;
 					tank_bullet_alive[0] <= 1'b0;
-					xpos_tank_bullet_0<=10'bXXXXXXXXX;
+					xpos_tank_bullet_0<=1000;
 				end
 				//hit mons2
 				if( (xpos_tank_bullet_0 <= xpos_mons_2+10) && (xpos_tank_bullet_0 >= xpos_mons_2-10)  && (ypos_tank_bullet_0 == ypos_mons_2))
 				begin
 					monster_destroyed[2] = 1;
 					tank_bullet_alive[0] <= 1'b0;
-					xpos_tank_bullet_0<=10'bXXXXXXXXX;
+					xpos_tank_bullet_0<=1000;
 				end
 				//hit mons3
 				if( (xpos_tank_bullet_0 <= xpos_mons_3+10) && (xpos_tank_bullet_0 >= xpos_mons_3-10)  && (ypos_tank_bullet_0 == ypos_mons_3))
 				begin
 					monster_destroyed[3] = 1;
 					tank_bullet_alive[0] <= 1'b0;
-					xpos_tank_bullet_0<=10'bXXXXXXXXX;
+					xpos_tank_bullet_0<=1000;
 				end
 				//hit mons4
 				if( (xpos_tank_bullet_0 <= xpos_mons_4+10) && (xpos_tank_bullet_0 >= xpos_mons_4-10)  && (ypos_tank_bullet_0 == ypos_mons_4))
 				begin
 					monster_destroyed[4] = 1;
 					tank_bullet_alive[0] <= 1'b0;
-					xpos_tank_bullet_0<=10'bXXXXXXXXX;
+					xpos_tank_bullet_0<=1000;
 				end
 			end
 
@@ -318,35 +283,35 @@ module block_controller(
 				begin
 					monster_destroyed[0] = 1;
 					tank_bullet_alive[1] <= 1'b0;
-					xpos_tank_bullet_1<=10'bXXXXXXXXX;
+					xpos_tank_bullet_1<=1000;
 				end
 				//hit mons1
 				if( (xpos_tank_bullet_1 <= xpos_mons_1+10) && (xpos_tank_bullet_1 >= xpos_mons_1-10)  && (ypos_tank_bullet_1 == ypos_mons_1))
 				begin
 					monster_destroyed[1] = 1;
 					tank_bullet_alive[1] <= 1'b0;
-					xpos_tank_bullet_1<=10'bXXXXXXXXX;
+					xpos_tank_bullet_1<=1000;
 				end
 				//hit mons2
 				if( (xpos_tank_bullet_1 <= xpos_mons_2+10) && (xpos_tank_bullet_1 >= xpos_mons_2-10)  && (ypos_tank_bullet_1 == ypos_mons_2))
 				begin
 					monster_destroyed[2] = 1;
 					tank_bullet_alive[1] <= 1'b0;
-					xpos_tank_bullet_1<=10'bXXXXXXXXX;
+					xpos_tank_bullet_1<=1000;
 				end
 				//hit mons3
 				if( (xpos_tank_bullet_1 <= xpos_mons_3+10) && (xpos_tank_bullet_1 >= xpos_mons_3-10)  && (ypos_tank_bullet_1 == ypos_mons_3))
 				begin
 					monster_destroyed[3] = 1;
 					tank_bullet_alive[1] <= 1'b0;
-					xpos_tank_bullet_1<=10'bXXXXXXXXX;
+					xpos_tank_bullet_1<=1000;
 				end
 				//hit mons4
 				if( (xpos_tank_bullet_1 <= xpos_mons_4+10) && (xpos_tank_bullet_1 >= xpos_mons_4-10)  && (ypos_tank_bullet_1 == ypos_mons_4))
 				begin
 					monster_destroyed[4] = 1;
 					tank_bullet_alive[1] <= 1'b0;
-					xpos_tank_bullet_1<=10'bXXXXXXXXX;
+					xpos_tank_bullet_1<=1000;
 				end
 			end
 
@@ -358,52 +323,52 @@ module block_controller(
 				begin
 					monster_destroyed[0] = 1;
 					tank_bullet_alive[2] <= 1'b0;
-					xpos_tank_bullet_2<=10'bXXXXXXXXX;
+					xpos_tank_bullet_2<=1000;
 				end
 				//hit mons1
 				if( (xpos_tank_bullet_2 <= xpos_mons_1+10) && (xpos_tank_bullet_2 >= xpos_mons_1-10)  && (ypos_tank_bullet_2 == ypos_mons_1))
 				begin
 					monster_destroyed[1] = 1;
 					tank_bullet_alive[2] <= 1'b0;
-					xpos_tank_bullet_2<=10'bXXXXXXXXX;
+					xpos_tank_bullet_2<=1000;
 				end
 				//hit mons2
 				if( (xpos_tank_bullet_2 <= xpos_mons_2+10) && (xpos_tank_bullet_2 >= xpos_mons_2-10)  && (ypos_tank_bullet_2 == ypos_mons_2))
 				begin
 					monster_destroyed[2] = 1;
 					tank_bullet_alive[2] <= 1'b0;
-					xpos_tank_bullet_2<=10'bXXXXXXXXX;
+					xpos_tank_bullet_2<=1000;
 				end
 				//hit mons3
 				if( (xpos_tank_bullet_2 <= xpos_mons_3+10) && (xpos_tank_bullet_2 >= xpos_mons_3-10)  && (ypos_tank_bullet_2 == ypos_mons_3))
 				begin
 					monster_destroyed[3] = 1;
 					tank_bullet_alive[2] <= 1'b0;
-					xpos_tank_bullet_2<=10'bXXXXXXXXX;
+					xpos_tank_bullet_2<=1000;
 				end
 				//hit mons4
 				if( (xpos_tank_bullet_2 <= xpos_mons_4+10) && (xpos_tank_bullet_2 >= xpos_mons_4-10)  && (ypos_tank_bullet_2 == ypos_mons_4))
 				begin
 					monster_destroyed[4] = 1;
 					tank_bullet_alive[2] <= 1'b0;
-					xpos_tank_bullet_2<=10'bXXXXXXXXX;
+					xpos_tank_bullet_2<=1000;
 				end
 			end
 			
 			// IF tank bullets reached top of screen (range from 32-33), reset bullet to available (=0)
 			if((ypos_tank_bullet_0>=32) && (ypos_tank_bullet_0<=33)) begin
 				tank_bullet_alive[0] <= 1'b0;
-				xpos_tank_bullet_0<=10'bXXXXXXXXX;
+				xpos_tank_bullet_0<=1000;
 			end
 		
 			if((ypos_tank_bullet_1>=32) && (ypos_tank_bullet_1<=33)) begin
 				tank_bullet_alive[1] <= 1'b0;
-				xpos_tank_bullet_1<=10'bXXXXXXXXX;
+				xpos_tank_bullet_1<=1000;
 			end
 			
 			if((ypos_tank_bullet_2>=32) && (ypos_tank_bullet_2<=33)) begin
 				tank_bullet_alive[2] <= 1'b0;
-				xpos_tank_bullet_2<=10'bXXXXXXXXX;
+				xpos_tank_bullet_2<=1000;
 			end
 		end
 	end
