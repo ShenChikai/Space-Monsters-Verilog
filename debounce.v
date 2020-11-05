@@ -1,39 +1,65 @@
-module debounce(rst, clk, btn_press, clean_press);
+module debounce(rst, clk, btn_press, clean, single);
     input rst, clk;
     input btn_press;
-    output reg clean_press;
+    output clean, single;
 
-    reg [19:0] debounce_count;
-    reg temp;
-    wire [19:0] delay;
-    assign delay = 20'd1000000;
+    parameter N_dc = 25;
 
+    (* fsm_encoding = "user" *)
+    reg [3:0] state;
+    reg [N_dc-1:0] debounce_count;
+
+    assign {clean, single} = state[3:2];
+
+    localparam
+        INI     = 4'b0000,
+        WQ      = 4'b0001,
+        SCEN_st = 4'b1100,
+        CCR     = 4'b1000,
+        WFCR    = 4'b1001;
+    
     always@(posedge clk, posedge rst)
-    begin
+    begin : Debounce_State_Machine
         if(rst)
-        begin
-            debounce_count <= 20'b0;
-            temp <= 1'b0;
-            clean_press <= 1'b0;
-        end
+            begin
+                state <= INI;
+                debounce_count <= 'bx;
+            end
         else
-        begin
-            if(btn_press)
             begin
-                if(debounce_count == delay)
-                    clean_press <= temp;
-                else
-                begin
-                    debounce_count <= debounce_count + 1'b1;
-                    temp <= btn_press;
-                end
+                case(state)
+                    INI:
+                    begin
+                        debounce_count <= 0;
+                        if(btn_press) state <= WQ;
+                    end
+                    WQ:
+                    begin
+                        debounce_count <= debounce_count + 1;
+                        if(!btn_press) state <= INI;
+                        else if(debounce_count[N_dc-2]) //0.084sec
+                        begin
+                            state <= SCEN_st;
+                        end
+                    end 
+                    SCEN_st:
+                    begin
+                        debounce_count <= 0;
+                        state <= CCR;
+                    end
+                    CCR:
+                    begin
+                        debounce_count <= 0;
+                        if(!btn_press) state <= WFCR;
+                    end
+                    WFCR:
+                    begin
+                        debounce_count <= debounce_count +1;
+                        if(btn_press) state <= CCR;
+                        else if(debounce_count[N_dc-2]) state <= INI;
+                    end
+                endcase
             end
-            else
-            begin
-                debounce_count <= 20'b0;
-                clean_press <= 1'b0;
-            end
-        end
     end
 
 endmodule

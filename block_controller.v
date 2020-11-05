@@ -172,7 +172,8 @@ module block_controller(
 	assign monster_4_bullet_2 =vCount>=(ypos_mons_4_bullet_2 -1) && vCount<=(ypos_mons_4_bullet_2 +1) && hCount>=(xpos_mons_4_bullet_2 -1) && hCount<=(xpos_mons_4_bullet_2 +1);
 	
 	//Debounce all btn press here
-	ee201_debouncer(clk, rst, up, DPB, SCEN, MCEN, CCEN);
+	// ee201_debouncer(clk, rst, up, DPB, SCEN, MCEN, CCEN);
+	debounce(rst, clk, up, DPB, SCEN);
 	
 	// ---------------------------------------------------------------------------------------Tank-------------------------------------------------------------------------------------------------
 	
