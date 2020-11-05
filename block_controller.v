@@ -798,7 +798,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_0_bullet_alive[0] == 1'b1) begin
+			if (monster_destroyed[0]) begin
+				xpos_mons_0_bullet_0<=1000;
+			end
+			else if (mons_0_bullet_alive[0] == 1'b1) begin
 				// move down
 				ypos_mons_0_bullet_0<=ypos_mons_0_bullet_0 + 1;
 			end
@@ -820,7 +823,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_0_bullet_alive[1] == 1'b1) begin
+			if (monster_destroyed[0]) begin
+				xpos_mons_0_bullet_1<=1000;
+			end
+			else if (mons_0_bullet_alive[1] == 1'b1) begin
 				// move down
 				ypos_mons_0_bullet_1<=ypos_mons_0_bullet_1 + 1;
 			end
@@ -842,7 +848,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_0_bullet_alive[2] == 1'b1) begin
+			if (monster_destroyed[0]) begin
+				xpos_mons_0_bullet_2<=1000;
+			end
+			else if (mons_0_bullet_alive[2] == 1'b1) begin
 				// move down
 				ypos_mons_0_bullet_2<=ypos_mons_0_bullet_2 + 1;
 			end
@@ -864,7 +873,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_1_bullet_alive[0] == 1'b1) begin
+			if (monster_destroyed[1]) begin
+				xpos_mons_1_bullet_0<=1000;
+			end
+			else if (mons_1_bullet_alive[0] == 1'b1) begin
 				// move down
 				ypos_mons_1_bullet_0<=ypos_mons_1_bullet_0 + 1;
 			end
@@ -886,7 +898,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_1_bullet_alive[1] == 1'b1) begin
+			if (monster_destroyed[1]) begin
+				xpos_mons_1_bullet_1<=1000;
+			end
+			else if (mons_1_bullet_alive[1] == 1'b1) begin
 				// move down
 				ypos_mons_1_bullet_1<=ypos_mons_1_bullet_1 + 1;
 			end
@@ -908,7 +923,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_1_bullet_alive[2] == 1'b1) begin
+			if (monster_destroyed[1]) begin
+				xpos_mons_1_bullet_2<=1000;
+			end
+			else if (mons_1_bullet_alive[2] == 1'b1) begin
 				// move down
 				ypos_mons_1_bullet_2<=ypos_mons_1_bullet_2 + 1;
 			end
@@ -930,7 +948,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_2_bullet_alive[0] == 1'b1) begin
+			if (monster_destroyed[2]) begin
+				xpos_mons_2_bullet_0<=1000;
+			end
+			else if (mons_2_bullet_alive[0] == 1'b1) begin
 				// move down
 				ypos_mons_2_bullet_0<=ypos_mons_2_bullet_0 + 1;
 			end
@@ -952,7 +973,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_2_bullet_alive[1] == 1'b1) begin
+			if (monster_destroyed[2]) begin
+				xpos_mons_2_bullet_1<=1000;
+			end
+			else if (mons_2_bullet_alive[1] == 1'b1) begin
 				// move down
 				ypos_mons_2_bullet_1<=ypos_mons_2_bullet_1 + 1;
 			end
@@ -974,7 +998,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_2_bullet_alive[2] == 1'b1) begin
+			if (monster_destroyed[2]) begin
+				xpos_mons_2_bullet_2<=1000;
+			end
+			else if (mons_2_bullet_alive[2] == 1'b1) begin
 				// move down
 				ypos_mons_2_bullet_2<=ypos_mons_2_bullet_2 + 1;
 			end
@@ -996,7 +1023,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_3_bullet_alive[0] == 1'b1) begin
+			if (monster_destroyed[3]) begin
+				xpos_mons_3_bullet_0<=1000;
+			end
+			else if (mons_3_bullet_alive[0] == 1'b1) begin
 				// move down
 				ypos_mons_3_bullet_0<=ypos_mons_3_bullet_0 + 1;
 			end
@@ -1018,7 +1048,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_3_bullet_alive[1] == 1'b1) begin
+			if (monster_destroyed[3]) begin
+				xpos_mons_3_bullet_1<=1000;
+			end
+			else if (mons_3_bullet_alive[1] == 1'b1) begin
 				// move down
 				ypos_mons_3_bullet_1<=ypos_mons_3_bullet_1 + 1;
 			end
@@ -1040,7 +1073,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_3_bullet_alive[2] == 1'b1) begin
+			if (monster_destroyed[3]) begin
+				xpos_mons_3_bullet_2<=1000;
+			end
+			else if (mons_3_bullet_alive[2] == 1'b1) begin
 				// move down
 				ypos_mons_3_bullet_2<=ypos_mons_3_bullet_2 + 1;
 			end
@@ -1062,7 +1098,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_4_bullet_alive[0] == 1'b1) begin
+			if (monster_destroyed[4]) begin
+				xpos_mons_4_bullet_0<=1000;
+			end
+			else if (mons_4_bullet_alive[0] == 1'b1) begin
 				// move down
 				ypos_mons_4_bullet_0<=ypos_mons_4_bullet_0 + 1;
 			end
@@ -1084,7 +1123,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_4_bullet_alive[1] == 1'b1) begin
+			if (monster_destroyed[4]) begin
+				xpos_mons_4_bullet_1<=1000;
+			end
+			else if (mons_4_bullet_alive[1] == 1'b1) begin
 				// move down
 				ypos_mons_4_bullet_1<=ypos_mons_4_bullet_1 + 1;
 			end
@@ -1106,7 +1148,10 @@ module block_controller(
 		end
 		
 		else if (clk) begin
-			if (mons_4_bullet_alive[2] == 1'b1) begin
+			if (monster_destroyed[4]) begin
+				xpos_mons_4_bullet_2<=1000;
+			end
+			else if (mons_4_bullet_alive[2] == 1'b1) begin
 				// move down
 				ypos_mons_4_bullet_2<=ypos_mons_4_bullet_2 + 1;
 			end
