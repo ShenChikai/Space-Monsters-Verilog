@@ -1,11 +1,7 @@
 `timescale 1ns / 1ps
 
 module block_controller(
-<<<<<<< Updated upstream
-	input clk, //this clock must be a slow enough clock to view the changing positions of the objects
-=======
 	input clk,
->>>>>>> Stashed changes
 	input bright,
 	input rst,
 	input left, input right, input up,
@@ -26,18 +22,14 @@ module block_controller(
 	
 	//these two values dictate the center of the block, incrementing and decrementing them leads the block to move in certain directions
 	reg [9:0] xpos_tank, ypos_tank;
-<<<<<<< Updated upstream
-	// 10 monsters
-=======
 	// debounce up
-	reg [1:0] upState;
-	wire debounced_up;
+	// reg [1:0] upState;
+	// wire debounced_up;
 	// 3 tank bullets positions
 	reg [9:0] xpos_tank_bullet_0, ypos_tank_bullet_0;
 	reg [9:0] xpos_tank_bullet_1, ypos_tank_bullet_1;
 	reg [9:0] xpos_tank_bullet_2, ypos_tank_bullet_2;
 	// 5 monsters positions
->>>>>>> Stashed changes
 	reg [9:0] xpos_mons_0, ypos_mons_0;
 	reg [9:0] xpos_mons_1, ypos_mons_1;
 	reg [9:0] xpos_mons_2, ypos_mons_2;
@@ -60,9 +52,6 @@ module block_controller(
 	reg [9:0] xpos_mons_4_bullet_1, ypos_mons_4_bullet_1;
 	reg [9:0] xpos_mons_4_bullet_2, ypos_mons_4_bullet_2;
 	
-<<<<<<< Updated upstream
-	parameter BLACK = 12'b1111_1111_1111;
-=======
 	// object flag destroyed
 	reg tank_destroyed;
 	reg [4:0] monster_destroyed;
@@ -79,7 +68,6 @@ module block_controller(
 	
 	// -------------------------------------------------------------------------------------Color_Display_4_Objects-----------------------------------------------------------------------------------
 	parameter BLACK = 12'b0000_0000_0000;
->>>>>>> Stashed changes
 	parameter RED   = 12'b1111_0000_0000;
 	parameter GREEN = 12'b0000_1111_0000;
 	parameter BLUE 	= 12'b0000_0000_1111;
@@ -90,12 +78,6 @@ module block_controller(
 	always@ (*) begin
     	if(~bright)	//force black if not inside the display area
 			rgb = 12'b0000_0000_0000;
-<<<<<<< Updated upstream
-		else if (tank_head)
-			rgb = GREEN;
-		else if (tank_body)
-			rgb = GREEN;
-=======
 		else if (tank_bullet_0)
 			rgb = BLUE;
 		else if (tank_bullet_1)
@@ -106,7 +88,6 @@ module block_controller(
 			rgb = GREEN;
 		else if (tank_body)
 			rgb = GREEN;	
->>>>>>> Stashed changes
 		else if (monster_0)
 			rgb = RED;
 		else if (monster_1)
@@ -155,14 +136,6 @@ module block_controller(
 	// draw tank
 	assign tank_head =vCount>=(ypos_tank-5) && vCount< (ypos_tank) && hCount>=(xpos_tank-2) && hCount<=(xpos_tank+2);
 	assign tank_body =vCount>=(ypos_tank) && vCount<=(ypos_tank+10) && hCount>=(xpos_tank-10) && hCount<=(xpos_tank+10);
-<<<<<<< Updated upstream
-	// draw monsters
-	assign monster_0 =vCount>=(ypos_mons_0 -3) && vCount<=(ypos_mons_0 +3) && hCount>=(xpos_mons_0 -5) && hCount<=(xpos_mons_0 +5);
-	assign monster_1 =vCount>=(ypos_mons_1 -3) && vCount<=(ypos_mons_1 +3) && hCount>=(xpos_mons_1 -5) && hCount<=(xpos_mons_1 +5);
-	assign monster_2 =vCount>=(ypos_mons_2 -3) && vCount<=(ypos_mons_2 +3) && hCount>=(xpos_mons_2 -5) && hCount<=(xpos_mons_2 +5);
-	assign monster_3 =vCount>=(ypos_mons_3 -3) && vCount<=(ypos_mons_3 +3) && hCount>=(xpos_mons_3 -5) && hCount<=(xpos_mons_3 +5);
-	assign monster_4 =vCount>=(ypos_mons_4 -3) && vCount<=(ypos_mons_4 +3) && hCount>=(xpos_mons_4 -5) && hCount<=(xpos_mons_4 +5);
-=======
 	// draw tank bullets
 	assign tank_bullet_0 =vCount>=(ypos_tank_bullet_0 -1) && vCount<=(ypos_tank_bullet_0 +1) && hCount>=(xpos_tank_bullet_0 -1) && hCount<=(xpos_tank_bullet_0 +1);
 	assign tank_bullet_1 =vCount>=(ypos_tank_bullet_1 -1) && vCount<=(ypos_tank_bullet_1 +1) && hCount>=(xpos_tank_bullet_1 -1) && hCount<=(xpos_tank_bullet_1 +1);
@@ -194,21 +167,23 @@ module block_controller(
 	assign monster_4_bullet_1 =vCount>=(ypos_mons_4_bullet_1 -1) && vCount<=(ypos_mons_4_bullet_1 +1) && hCount>=(xpos_mons_4_bullet_1 -1) && hCount<=(xpos_mons_4_bullet_1 +1);
 	assign monster_4_bullet_2 =vCount>=(ypos_mons_4_bullet_2 -1) && vCount<=(ypos_mons_4_bullet_2 +1) && hCount>=(xpos_mons_4_bullet_2 -1) && hCount<=(xpos_mons_4_bullet_2 +1);
 	
+	//Debounce all btn press here
+	debounce DUP(rst, clk, up, clean_up);
+	pulse PULSE_UP(rst, clk, clean_up, pulse_up);
 	
 	// initialize bg, flags 
 	always@(posedge rst)  begin
 		if (rst)
 			background <= BLACK;
-			tank_destroyed = 0;					// TODO: check tank collision	还没做的 先放这
+			tank_destroyed = 0;					// TODO: check tank collision	还没�?�的 先放这
 			monster_destroyed = 5'b00000;		// TODO: check mons collision
 			
 	end
->>>>>>> Stashed changes
 	
 	// ---------------------------------------------------------------------------------------Tank-------------------------------------------------------------------------------------------------
 	// button up Debounce
 	// Update register to the btn state now and 1 cycle ago (compare now & before)
-	always@(posedge clk, posedge rst) 
+	/* always@(posedge clk, posedge rst) 
 	begin
 		if (rst) begin
 			upState <= 2'b00;
@@ -220,7 +195,7 @@ module block_controller(
 		end
 	end
 	// If we see a edge now, but didnt 1 cycle ago, pulse
-	assign debounced_up = ~upState[1] & upState[0];
+	assign debounced_up = ~upState[1] & upState[0]; */
 	
 	// tank state block: left, right, shoot
 	always@(posedge clk, posedge rst) 
@@ -237,22 +212,11 @@ module block_controller(
 			xpos_tank_bullet_1<=444;
 			xpos_tank_bullet_2<=456;
 		end
-<<<<<<< Updated upstream
-		else if (clk) begin
-			// shoot
-			if (up) begin
-				
-			end
-			// move left/right
-			else if(right) begin
-				xpos_tank<=xpos_tank+2; //change the amount you increment to make the speed faster 
-				if(xpos_tank==800) //these are rough values to attempt looping around, you can fine-tune them to make it more accurate- refer to the block comment above
-=======
 		
 		else if (clk) 
 		begin
 			// shoot when debounced up
-			if (up) begin					// TODO: 这里应该要debounce_up，但是我上面写的debounced_up只能触发一次，不知道错哪了
+			if (pulse_up) begin					// TODO: 这里应该�?debounce_up，但是我上�?�写的debounced_up�?�能触�?�一次，�?知�?�错哪了
 				if (tank_bullet_alive[0] == 1'b0) begin			// set bullet0 alive (=1)
 					tank_bullet_alive[0] <= 1'b1;
 				end
@@ -279,15 +243,11 @@ module block_controller(
 					
 				// wrap around
 				if(xpos_tank==800) begin
->>>>>>> Stashed changes
 					xpos_tank<=150;
+				end
 			end
 			else if(left) begin
 				xpos_tank<=xpos_tank-2;
-<<<<<<< Updated upstream
-				if(xpos_tank==150)
-					xpos_tank<=800;
-=======
 				// (Also updating bullets position with tank IF not alive)
 				if(tank_bullet_alive[0] == 1'b0)
 					xpos_tank_bullet_0<=xpos_tank-2;
@@ -385,7 +345,6 @@ module block_controller(
 			else begin
 				// not alive, set ypos to be same as tank
 				ypos_tank_bullet_2<=ypos_tank;
->>>>>>> Stashed changes
 			end
 		end
 	end
@@ -598,14 +557,6 @@ module block_controller(
 			end
 		end
 	end
-<<<<<<< Updated upstream
-
-		//the background color reflects the most recent button press
-	always@(posedge clk, posedge rst) begin
-		if(rst)
-			background <= PURPLE;
-
-=======
 	
 	// monster_0_bullet_1 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
@@ -627,7 +578,6 @@ module block_controller(
 				ypos_mons_0_bullet_1<=ypos_mons_0;
 			end
 		end
->>>>>>> Stashed changes
 	end
 	
 	// monster_0_bullet_2 movement (over y axis only!)
