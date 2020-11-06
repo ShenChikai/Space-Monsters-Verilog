@@ -30,9 +30,9 @@ module space_monsters_sm(
     SUCCESS = 5'b0100000, 
     FAILED  = 7'b1000000;
 
-    block_controller(clk, bright, rst, left, right, up, hCount, vCount, rgb, background);
+    block_controller(clk, bright, rst, left, right, up, hCount, vCount, level_in, rgb, background, win, tank_destroyed);
 
-    debounce(rst, clk, down, clean_down, pulse_down);
+    debounce DEB_D(rst, clk, down, clean_down, pulse_down);
 
     /*************** State Machine *************/
     always@(posedge clk, posedge rst)
