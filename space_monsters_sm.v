@@ -32,7 +32,7 @@ module space_monsters_sm(
     SUCCESS = 5'b0100000, 
     FAILED  = 7'b1000000;
 
-    block_controller(.clk(clk), .bright(bright), .rst(rst), .left(left), .right(right), .up(up), .hCount(hCount), vCount, level_in, rgb_out, background_out, win, tank_destroyed);
+    block_controller(clk, bright, rst, left, right, up, hCount, vCount, level_in, rgb_out, background_out, win, tank_destroyed);
 
     debounce DEB_D(rst, clk, down, clean_down, pulse_down);
 

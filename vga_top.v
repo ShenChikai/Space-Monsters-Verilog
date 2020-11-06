@@ -67,7 +67,7 @@ module vga_top(
 	wire [11:0] background;
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 	// block_controller sc(.clk(move_clk), .bright(bright), .rst(BtnC), .up(BtnU), .left(BtnL),.right(BtnR),.hCount(hc), .vCount(vc), .rgb(rgb), .background(background));
-	space_monsters_sm sm(.clk(move_clk), .bright(bright), .rst(BtnC), .left(BtnL),.right(BtnR), .up(BtnU), down(BtnD), .hCount(hc), .vCount(vc), .rgb(rgb), .background(background), .score(score));
+	space_monsters_sm sm(.clk(move_clk), .bright(bright), .rst(BtnC), .left(BtnL),.right(BtnR), .up(BtnU), .down(BtnD), .hCount(hc), .vCount(vc), .rgb(rgb), .background(background), .score(score));
 
 	
 	assign vgaR = rgb[11 : 8];
