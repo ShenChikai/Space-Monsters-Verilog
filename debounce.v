@@ -3,7 +3,7 @@ module debounce(rst, clk, btn_press, clean, single);
     input btn_press;
     output clean, single;
 
-    parameter N_dc = 25;
+    parameter N_dc = 5;
 
     (* fsm_encoding = "user" *)
     reg [3:0] state;
