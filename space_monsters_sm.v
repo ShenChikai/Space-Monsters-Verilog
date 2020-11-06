@@ -12,9 +12,12 @@ module space_monsters_sm(
     input [9:0] hCount, vCount;
 
     /** OUTPUTS  **/
-    output reg [11:0] rgb;
-    output reg [11:0] background;
+    output wire [11:0] rgb;
+    output wire [11:0] background;
     output reg [7:0] score;
+
+    wire [11:0] rgb_out;
+    wire [11:0] background_out;
 
     reg [6:0] state;
 
@@ -29,12 +32,12 @@ module space_monsters_sm(
     SUCCESS = 5'b0100000, 
     FAILED  = 7'b1000000;
 
-    block_controller(clk, bright, rst, left, right, up, hCount, vCount, level_in, rgb_out, background_out, win, tank_destroyed);
+    block_controller(.clk(clk), bright, rst, left, right, up, hCount, vCount, level_in, rgb_out, background_out, win, tank_destroyed);
+
+    debounce DEB_D(rst, clk, down, clean_down, pulse_down);
 
     assign rgb = rgb_out;
     assign background = background_out;
-
-    debounce DEB_D(rst, clk, down, clean_down, pulse_down);
 
     /*************** State Machine *************/
     always@(posedge clk, posedge rst)
