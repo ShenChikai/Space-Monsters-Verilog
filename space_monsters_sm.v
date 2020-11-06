@@ -14,11 +14,12 @@ module space_monsters_sm(
     /** OUTPUTS  **/
     output wire [11:0] rgb;
     output wire [11:0] background;
-    output reg [7:0] score;
+    output reg [2:0] score;
 
 	wire [4:0] monster_destroyed;
     wire [11:0] rgb_out;
     wire [11:0] background_out;
+    wire [2:0] score_out;
 
     reg [6:0] state;
 
@@ -33,7 +34,7 @@ module space_monsters_sm(
     SUCCESS = 5'b0100000, 
     FAILED  = 7'b1000000;
 
-    block_controller(clk, bright, rst, left, right, up, hCount, vCount, level_in, rgb_out, background_out, monster_destroyed, tank_destroyed);
+    block_controller(clk, bright, rst, left, right, up, hCount, vCount, level_in, rgb_out, background_out, monster_destroyed, tank_destroyed, score_out);
 
     debounce DEB_D(rst, clk, down, clean_down, pulse_down);
 
@@ -63,6 +64,7 @@ module space_monsters_sm(
                     end
                 L1:
                     begin
+                        score <= score_out;
                         if((monster_destroyed[0] == 1) && (monster_destroyed[2] == 1) && (monster_destroyed[4] == 1))state <= L2I;
                         else if(tank_destroyed) state <= FAILED;
                     end
@@ -73,6 +75,7 @@ module space_monsters_sm(
                     end
                 L2:
                     begin
+                        score <= score_out;
 						level_in <= 0;
                         if(monster_destroyed == 5'b11111) state <= SUCCESS;
                         else if(tank_destroyed) state <= FAILED;
