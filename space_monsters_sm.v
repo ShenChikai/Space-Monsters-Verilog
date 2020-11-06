@@ -32,7 +32,7 @@ module space_monsters_sm(
     SUCCESS = 5'b0100000, 
     FAILED  = 7'b1000000;
 
-    block_controller(.clk(clk), bright, rst, left, right, up, hCount, vCount, level_in, rgb_out, background_out, win, tank_destroyed);
+    block_controller(.clk(clk), .bright(bright), .rst(rst), .left(left), .right(right), .up(up), .hCount(hCount), vCount, level_in, rgb_out, background_out, win, tank_destroyed);
 
     debounce DEB_D(rst, clk, down, clean_down, pulse_down);
 
@@ -53,10 +53,12 @@ module space_monsters_sm(
                     begin
                         score <= 0;
                         level_in <= 0;
+                        state <= L1I;
                     end
                 L1I:
                     begin
                         level_in <= 1;
+                        state <= L1;
                     end
                 L1:
                     begin
@@ -66,6 +68,7 @@ module space_monsters_sm(
                 L2I:
                     begin
                         level_in <= 2;
+                        state <= L2;
                     end
                 L2:
                     begin
