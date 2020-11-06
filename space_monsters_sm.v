@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-
 module space_monsters_sm(
     clk, bright, rst, left, right, up, down, hCount, vCount,
     rgb, background, score
@@ -15,7 +14,7 @@ module space_monsters_sm(
     /** OUTPUTS  **/
     output reg [11:0] rgb;
     output reg [11:0] background;
-    output [7:0] score;
+    output reg [7:0] score;
 
     reg [6:0] state;
 
@@ -30,7 +29,10 @@ module space_monsters_sm(
     SUCCESS = 5'b0100000, 
     FAILED  = 7'b1000000;
 
-    block_controller(clk, bright, rst, left, right, up, hCount, vCount, level_in, rgb, background, win, tank_destroyed);
+    block_controller(clk, bright, rst, left, right, up, hCount, vCount, level_in, rgb_out, background_out, win, tank_destroyed);
+
+    assign rgb = rgb_out;
+    assign background = background_out;
 
     debounce DEB_D(rst, clk, down, clean_down, pulse_down);
 
@@ -42,6 +44,7 @@ module space_monsters_sm(
                 state <= START;
             end
         else 
+        begin
             case(state)
                 START:
                     begin
@@ -74,6 +77,8 @@ module space_monsters_sm(
                     begin
                         if(clean_down) state <= START;
                     end
+            endcase
+        end
 
     end
 
