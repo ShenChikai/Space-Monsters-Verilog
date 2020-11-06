@@ -9,7 +9,7 @@ module block_controller(
 	input [1:0] level_in,
 	output reg [11:0] rgb,
 	output reg [11:0] background,
-	output reg win,
+	output reg [4:0] monster_destroyed,
 	output reg tank_destroyed
    );
    
@@ -68,9 +68,6 @@ module block_controller(
 	reg [2:0] mons_3_bullet_alive;
 	reg [2:0] mons_4_bullet_alive;
 	
-	// level_in == 2 flag
-	reg mons_1_level_flag;
-	reg mons_3_level_flag;
 	
 	// -------------------------------------------------------------------------------------Color_Display_4_Objects-----------------------------------------------------------------------------------
 	parameter BLACK = 12'b0000_0000_0000;
@@ -177,15 +174,6 @@ module block_controller(
 	assign monster_4_bullet_1 =vCount>=(ypos_mons_4_bullet_1 -1) && vCount<=(ypos_mons_4_bullet_1 +1) && hCount>=(xpos_mons_4_bullet_1 -1) && hCount<=(xpos_mons_4_bullet_1 +1);
 	assign monster_4_bullet_2 =vCount>=(ypos_mons_4_bullet_2 -1) && vCount<=(ypos_mons_4_bullet_2 +1) && hCount>=(xpos_mons_4_bullet_2 -1) && hCount<=(xpos_mons_4_bullet_2 +1);
 	
-	// input for general state machine
-	always@(posedge clk, posedge rst)  
-	begin
-		if (rst)
-			win = 0;
-		else if (clk)
-			win = ~tank_destroyed & (monster_destroyed[0] == 1) & (monster_destroyed[2] == 1) & (monster_destroyed[4] == 1);
-	end
-	
 	// Debounce all btn press here
 	// ee201_debouncer(clk, rst, up, DPB, SCEN, MCEN, CCEN);
 	debounce(rst, clk, up, DPB, SCEN);
@@ -195,7 +183,7 @@ module block_controller(
 	// tank state block: left, right, shoot
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if(rst)
 		begin
 			// bg color
 			background <= BLACK;
@@ -209,8 +197,25 @@ module block_controller(
 			xpos_tank_bullet_1<=1000;
 			xpos_tank_bullet_2<=1000;
 			// reset destory flag
-			monster_destroyed <= 5'b00000;
 			tank_destroyed <= 0;
+			monster_destroyed <= 5'b01010;
+		end
+		else if (level_in == 1)		// next level
+		begin
+			// bg color
+			background <= BLACK;
+			// rough values for center of screen
+			xpos_tank<=450;
+			ypos_tank<=450;
+			// tank_bullet_alive & xpos of bullet can be assigned in tank blcok
+			// and only ypos of bullet can only be assigned in corresponding bullet block
+			tank_bullet_alive <= 3'b000;
+			xpos_tank_bullet_0<=1000;
+			xpos_tank_bullet_1<=1000;
+			xpos_tank_bullet_2<=1000;
+			// reset destory flag
+			tank_destroyed <= 0;
+			monster_destroyed <= 5'b00000;
 		end
 		
 		else if (clk) 
@@ -474,23 +479,23 @@ module block_controller(
 			end
 			
 			//check if bullets from monster_3 hits tank
-			if(mons_3_bullet_alive[0])
+			if(mons_4_bullet_alive[0])
 			begin
 				//hit tank
-				if( (xpos_mons_3_bullet_0 <= xpos_tank+10) && (xpos_mons_3_bullet_0 >= xpos_tank-10) && (ypos_mons_3_bullet_0 == ypos_tank))
+				if( (xpos_mons_4_bullet_0 <= xpos_tank+10) && (xpos_mons_4_bullet_0 >= xpos_tank-10) && (ypos_mons_4_bullet_0 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
 				end
 			end
-			if(mons_3_bullet_alive[1])
+			if(mons_4_bullet_alive[1])
 			begin
 				//hit tank
-				if( (xpos_mons_3_bullet_1 <= xpos_tank+10) && (xpos_mons_3_bullet_1 >= xpos_tank-10) && (ypos_mons_3_bullet_1 == ypos_tank))
+				if( (xpos_mons_4_bullet_1 <= xpos_tank+10) && (xpos_mons_4_bullet_1 >= xpos_tank-10) && (ypos_mons_4_bullet_1 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
 				end
 			end
-			if(mons_3_bullet_alive[2])
+			if(mons_4_bullet_alive[2])
 			begin
 				//hit tank
 				if( (xpos_mons_4_bullet_2 <= xpos_tank+10) && (xpos_mons_4_bullet_2 >= xpos_tank-10) && (ypos_mons_4_bullet_2 == ypos_tank))
@@ -521,7 +526,7 @@ module block_controller(
 	// tank_bullet_0 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			ypos_tank_bullet_0<=450;
@@ -543,7 +548,7 @@ module block_controller(
 	// tank_bullet_1 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			ypos_tank_bullet_1<=450;
@@ -564,7 +569,7 @@ module block_controller(
 	// tank_bullet_2 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			ypos_tank_bullet_2<=450;
@@ -586,7 +591,7 @@ module block_controller(
 	// monster_0 state block
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_0<=250;
@@ -630,25 +635,16 @@ module block_controller(
 	// monster_1 state block
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_1_level_flag) begin
+		if((rst) || (level_in == 1))
+		begin
+			//rough values for center of screen
 			xpos_mons_1<=350;
 			ypos_mons_1<=100;
 			mons_1_bullet_alive<=3'b000;
-			mons_1_level_flag<=0;
-		end	
-		else if(rst)
-		begin
-			//rough values for center of screen
-			xpos_mons_1<=1000;
-			ypos_mons_1<=100;
-			mons_1_bullet_alive<=3'b000;
-			mons_1_level_flag<=0;
 		end
 		
 		else if (clk) 
 		begin
-			if ((level_in == 2) && (mons_1_level_flag ==0))
-				mons_1_level_flag<=1;
 			// shoot
 			if (mons_1_bullet_alive[0] == 1'b0) begin											// set bullet0 alive (=1)
 				mons_1_bullet_alive[0] <= 1'b1;
@@ -682,7 +678,7 @@ module block_controller(
 	// monster_2 state block
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_2<=450;
@@ -726,25 +722,16 @@ module block_controller(
 	// monster_3 state block
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_3_level_flag) begin
+		if((rst) || (level_in == 1))
+		begin
+			//rough values for center of screen
 			xpos_mons_3<=550;
 			ypos_mons_3<=100;
 			mons_3_bullet_alive<=3'b000;
-			mons_3_level_flag<=0;
-		end	
-		else if(rst)
-		begin
-			//rough values for center of screen
-			xpos_mons_3<=1000;
-			ypos_mons_3<=100;
-			mons_3_bullet_alive<=3'b000;
-			mons_3_level_flag<=0;
 		end
 		
 		else if (clk) 
 		begin
-			if ((level_in == 2) && (mons_3_level_flag ==0))
-				mons_3_level_flag<=1;
 			// shoot
 			if (mons_3_bullet_alive[0] == 1'b0) begin											// set bullet0 alive (=1)
 				mons_3_bullet_alive[0] <= 1'b1;
@@ -779,7 +766,7 @@ module block_controller(
 	// monster_4 state block
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_4<=650;
@@ -824,7 +811,7 @@ module block_controller(
 	// monster_0_bullet_0 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_0_bullet_0<=250;
@@ -849,7 +836,7 @@ module block_controller(
 	// monster_0_bullet_1 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_0_bullet_1<=250;
@@ -874,7 +861,7 @@ module block_controller(
 	// monster_0_bullet_2 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_0_bullet_2<=250;
@@ -899,14 +886,9 @@ module block_controller(
 	// monster_1_bullet_0 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_1_level_flag) begin
-			xpos_mons_1_bullet_0<=350;
-			ypos_mons_1_bullet_0<=100;
-		end
-		else if(rst)
+		if((rst) || (level_in == 1)) 
 		begin
-			//rough values for center of screen
-			xpos_mons_1_bullet_0<=1000;
+			xpos_mons_1_bullet_0<=350;
 			ypos_mons_1_bullet_0<=100;
 		end
 		
@@ -928,14 +910,9 @@ module block_controller(
 	// monster_1_bullet_1 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_1_level_flag) begin
-			xpos_mons_1_bullet_0<=350;
-			ypos_mons_1_bullet_0<=100;
-		end
-		else if(rst)
+		if((rst) || (level_in == 1)) 
 		begin
-			//rough values for center of screen
-			xpos_mons_1_bullet_1<=1000;
+			xpos_mons_1_bullet_1<=350;
 			ypos_mons_1_bullet_1<=100;
 		end
 		
@@ -957,14 +934,9 @@ module block_controller(
 	// monster_1_bullet_2 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_1_level_flag) begin
-			xpos_mons_1_bullet_0<=350;
-			ypos_mons_1_bullet_0<=100;
-		end
-		else if(rst)
+		if((rst) || (level_in == 1)) 
 		begin
-			//rough values for center of screen
-			xpos_mons_1_bullet_2<=1000;
+			xpos_mons_1_bullet_2<=350;
 			ypos_mons_1_bullet_2<=100;
 		end
 		
@@ -986,7 +958,7 @@ module block_controller(
 	// monster_2_bullet_0 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_2_bullet_0<=450;
@@ -1011,7 +983,7 @@ module block_controller(
 	// monster_2_bullet_1 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_2_bullet_1<=450;
@@ -1036,7 +1008,7 @@ module block_controller(
 	// monster_2_bullet_2 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_2_bullet_2<=450;
@@ -1061,14 +1033,10 @@ module block_controller(
 	// monster_3_bullet_0 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_3_level_flag) begin
-			xpos_mons_1_bullet_0<=550;
-			ypos_mons_1_bullet_0<=100;
-		end
-		else if(rst)
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
-			xpos_mons_3_bullet_0<=1000;
+			xpos_mons_3_bullet_0<=550;
 			ypos_mons_3_bullet_0<=100;
 		end
 		
@@ -1090,14 +1058,10 @@ module block_controller(
 	// monster_3_bullet_1 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_3_level_flag) begin
-			xpos_mons_1_bullet_0<=550;
-			ypos_mons_1_bullet_0<=100;
-		end
-		else if(rst)
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
-			xpos_mons_3_bullet_1<=1000;
+			xpos_mons_3_bullet_1<=550;
 			ypos_mons_3_bullet_1<=100;
 		end
 		
@@ -1119,14 +1083,10 @@ module block_controller(
 	// monster_3_bullet_2 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if(mons_3_level_flag) begin
-			xpos_mons_1_bullet_0<=550;
-			ypos_mons_1_bullet_0<=100;
-		end
-		else if(rst)
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
-			xpos_mons_3_bullet_2<=1000;
+			xpos_mons_3_bullet_2<=550;
 			ypos_mons_3_bullet_2<=100;
 		end
 		
@@ -1148,7 +1108,7 @@ module block_controller(
 	// monster_4_bullet_0 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_4_bullet_0<=650;
@@ -1173,7 +1133,7 @@ module block_controller(
 	// monster_4_bullet_1 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_4_bullet_1<=650;
@@ -1198,7 +1158,7 @@ module block_controller(
 	// monster_4_bullet_2 movement (over y axis only!)
 	always@(posedge clk, posedge rst) 
 	begin
-		if((rst) || (level_in == 2))
+		if((rst) || (level_in == 1))
 		begin
 			//rough values for center of screen
 			xpos_mons_4_bullet_2<=650;
