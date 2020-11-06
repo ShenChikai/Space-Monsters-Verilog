@@ -10,7 +10,8 @@ module block_controller(
 	output reg [11:0] rgb,
 	output reg [11:0] background,
 	output reg [4:0] monster_destroyed,
-	output reg tank_destroyed
+	output reg tank_destroyed,
+	output reg [2:0] score
    );
    
 	// -------------------------------------------------------------------------------------Object_Variables(reg, wire)-----------------------------------------------------------------------------------
@@ -199,6 +200,7 @@ module block_controller(
 			// reset destory flag
 			tank_destroyed <= 0;
 			monster_destroyed <= 5'b01010;
+			score <= 0;
 		end
 		else if (level_in == 1)		// next level
 		begin
@@ -262,6 +264,7 @@ module block_controller(
 					monster_destroyed[0] = 1;
 					tank_bullet_alive[0] <= 1'b0;
 					xpos_tank_bullet_0<=1000;
+					score <= score+1;
 				end
 				//hit mons1
 				if( (xpos_tank_bullet_0 <= xpos_mons_1+10) && (xpos_tank_bullet_0 >= xpos_mons_1-10)  && (ypos_tank_bullet_0 == ypos_mons_1))
@@ -269,6 +272,7 @@ module block_controller(
 					monster_destroyed[1] = 1;
 					tank_bullet_alive[0] <= 1'b0;
 					xpos_tank_bullet_0<=1000;
+					score <= score+1;
 				end
 				//hit mons2
 				if( (xpos_tank_bullet_0 <= xpos_mons_2+10) && (xpos_tank_bullet_0 >= xpos_mons_2-10)  && (ypos_tank_bullet_0 == ypos_mons_2))
@@ -276,6 +280,7 @@ module block_controller(
 					monster_destroyed[2] = 1;
 					tank_bullet_alive[0] <= 1'b0;
 					xpos_tank_bullet_0<=1000;
+					score <= score+1;
 				end
 				//hit mons3
 				if( (xpos_tank_bullet_0 <= xpos_mons_3+10) && (xpos_tank_bullet_0 >= xpos_mons_3-10)  && (ypos_tank_bullet_0 == ypos_mons_3))
@@ -283,6 +288,7 @@ module block_controller(
 					monster_destroyed[3] = 1;
 					tank_bullet_alive[0] <= 1'b0;
 					xpos_tank_bullet_0<=1000;
+					score <= score+1;
 				end
 				//hit mons4
 				if( (xpos_tank_bullet_0 <= xpos_mons_4+10) && (xpos_tank_bullet_0 >= xpos_mons_4-10)  && (ypos_tank_bullet_0 == ypos_mons_4))
@@ -290,6 +296,7 @@ module block_controller(
 					monster_destroyed[4] = 1;
 					tank_bullet_alive[0] <= 1'b0;
 					xpos_tank_bullet_0<=1000;
+					score <= score+1;
 				end
 			end
 
@@ -302,6 +309,7 @@ module block_controller(
 					monster_destroyed[0] = 1;
 					tank_bullet_alive[1] <= 1'b0;
 					xpos_tank_bullet_1<=1000;
+					score <= score+1;
 				end
 				//hit mons1
 				if( (xpos_tank_bullet_1 <= xpos_mons_1+10) && (xpos_tank_bullet_1 >= xpos_mons_1-10)  && (ypos_tank_bullet_1 == ypos_mons_1))
@@ -309,6 +317,7 @@ module block_controller(
 					monster_destroyed[1] = 1;
 					tank_bullet_alive[1] <= 1'b0;
 					xpos_tank_bullet_1<=1000;
+					score <= score+1;
 				end
 				//hit mons2
 				if( (xpos_tank_bullet_1 <= xpos_mons_2+10) && (xpos_tank_bullet_1 >= xpos_mons_2-10)  && (ypos_tank_bullet_1 == ypos_mons_2))
@@ -316,6 +325,7 @@ module block_controller(
 					monster_destroyed[2] = 1;
 					tank_bullet_alive[1] <= 1'b0;
 					xpos_tank_bullet_1<=1000;
+					score <= score+1;
 				end
 				//hit mons3
 				if( (xpos_tank_bullet_1 <= xpos_mons_3+10) && (xpos_tank_bullet_1 >= xpos_mons_3-10)  && (ypos_tank_bullet_1 == ypos_mons_3))
@@ -323,6 +333,7 @@ module block_controller(
 					monster_destroyed[3] = 1;
 					tank_bullet_alive[1] <= 1'b0;
 					xpos_tank_bullet_1<=1000;
+					score <= score+1;
 				end
 				//hit mons4
 				if( (xpos_tank_bullet_1 <= xpos_mons_4+10) && (xpos_tank_bullet_1 >= xpos_mons_4-10)  && (ypos_tank_bullet_1 == ypos_mons_4))
@@ -330,6 +341,7 @@ module block_controller(
 					monster_destroyed[4] = 1;
 					tank_bullet_alive[1] <= 1'b0;
 					xpos_tank_bullet_1<=1000;
+					score <= score+1;
 				end
 			end
 
@@ -342,6 +354,7 @@ module block_controller(
 					monster_destroyed[0] = 1;
 					tank_bullet_alive[2] <= 1'b0;
 					xpos_tank_bullet_2<=1000;
+					score <= score+1;
 				end
 				//hit mons1
 				if( (xpos_tank_bullet_2 <= xpos_mons_1+10) && (xpos_tank_bullet_2 >= xpos_mons_1-10)  && (ypos_tank_bullet_2 == ypos_mons_1))
@@ -349,6 +362,7 @@ module block_controller(
 					monster_destroyed[1] = 1;
 					tank_bullet_alive[2] <= 1'b0;
 					xpos_tank_bullet_2<=1000;
+					score <= score+1;
 				end
 				//hit mons2
 				if( (xpos_tank_bullet_2 <= xpos_mons_2+10) && (xpos_tank_bullet_2 >= xpos_mons_2-10)  && (ypos_tank_bullet_2 == ypos_mons_2))
@@ -356,6 +370,7 @@ module block_controller(
 					monster_destroyed[2] = 1;
 					tank_bullet_alive[2] <= 1'b0;
 					xpos_tank_bullet_2<=1000;
+					score <= score+1;
 				end
 				//hit mons3
 				if( (xpos_tank_bullet_2 <= xpos_mons_3+10) && (xpos_tank_bullet_2 >= xpos_mons_3-10)  && (ypos_tank_bullet_2 == ypos_mons_3))
@@ -363,6 +378,7 @@ module block_controller(
 					monster_destroyed[3] = 1;
 					tank_bullet_alive[2] <= 1'b0;
 					xpos_tank_bullet_2<=1000;
+					score <= score+1;
 				end
 				//hit mons4
 				if( (xpos_tank_bullet_2 <= xpos_mons_4+10) && (xpos_tank_bullet_2 >= xpos_mons_4-10)  && (ypos_tank_bullet_2 == ypos_mons_4))
@@ -370,6 +386,7 @@ module block_controller(
 					monster_destroyed[4] = 1;
 					tank_bullet_alive[2] <= 1'b0;
 					xpos_tank_bullet_2<=1000;
+					score <= score+1;
 				end
 			end
 			

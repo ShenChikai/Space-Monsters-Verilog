@@ -1,18 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
 // Create Date:    12:18:00 12/14/2017 
-// Design Name: 
 // Module Name:    vga_top 
-// Project Name: 
-// Target Devices: 
-// Tool versions: 
-// Description: 
-//
-// Dependencies: 
-//
 // Revision: 
 // Revision 0.01 - File Created
 // Additional Comments: 
@@ -20,6 +9,9 @@
 // Date: 04/04/2020
 // Author: Yue (Julien) Niu
 // Description: Port from NEXYS3 to NEXYS4
+// 
+// 2020 Nov
+// Revised for final project
 //////////////////////////////////////////////////////////////////////////////////
 module vga_top(
 	input ClkPort,
@@ -42,7 +34,7 @@ module vga_top(
 	assign Reset=BtnC;
 	wire bright;
 	wire[9:0] hc, vc;
-	wire[7:0] score;
+	wire[2:0] score;
 	wire up,down,left,right;
 	wire [3:0] anode;
 	wire [11:0] rgb;
@@ -85,9 +77,9 @@ module vga_top(
 	//SSDs display 
 	//to show how we can interface our "game" module with the SSD's, we output the 12-bit rgb background value to the SSD's
 	assign SSD3 = 4'b0000;
-	assign SSD2 = background[11:8];
-	assign SSD1 = background[7:4];
-	assign SSD0 = background[3:0];
+	assign SSD2 = 4'b0000;
+	assign SSD1 = 4'b0000;
+	assign SSD0 = {1'b0, score};
 
 
 	// need a scan clk for the seven segment display 
