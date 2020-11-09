@@ -106,6 +106,8 @@ module block_controller(
 			rgb = RED;
 		else if (monster_4)
 			rgb = RED;
+		else if (monster_0_dark)
+			rgb = background;
 		else if (monster_0_bullet_0)
 			rgb = RED;
 		else if (monster_0_bullet_1)
@@ -149,7 +151,22 @@ module block_controller(
 	assign tank_bullet_1 =vCount>=(ypos_tank_bullet_1 -1) && vCount<=(ypos_tank_bullet_1 +1) && hCount>=(xpos_tank_bullet_1 -1) && hCount<=(xpos_tank_bullet_1 +1);
 	assign tank_bullet_2 =vCount>=(ypos_tank_bullet_2 -1) && vCount<=(ypos_tank_bullet_2 +1) && hCount>=(xpos_tank_bullet_2 -1) && hCount<=(xpos_tank_bullet_2 +1);
 	// draw monsters
-	assign monster_0 =vCount>=(ypos_mons_0 -5) && vCount<=(ypos_mons_0 +5) && hCount>=(xpos_mons_0 -10) && hCount<=(xpos_mons_0 +10);
+	assign monster_0_dark = (vCount>=(ypos_mons_0+3) && vCount<=(ypos_mons_0+5) && hCount>=(xpos_mons_0) && hCount<=(xpos_mons_0+2)) || 
+	(vCount>=(ypos_mons_0-5) && vCount<=(ypos_mons_0-3) && hCount>=(xpos_mons_0) && hCount<=(xpos_mons_0+2));
+	assign monster_0 = (vCount>=(ypos_mons_0-2) && vCount<=(ypos_mons_0+3) && hCount>=(xpos_mons_0-7) && hCount<=(xpos_mons_0+7)) || (vCount>=(ypos_mons_0-3) && vCount<=(ypos_mons_0-2) && hCount>=(xpos_mons_0+4) && hCount<=(xpos_mons_0+7)) ||
+	(vCount>=(ypos_mons_0-4) && vCount<=(ypos_mons_0-3) && hCount>=(xpos_mons_0+2) && hCount<=(xpos_mons_0+4)) ||
+	(vCount>=(ypos_mons_0-2) && vCount<=(ypos_mons_0) && hCount>=(xpos_mons_0+7) && hCount<=(xpos_mons_0+10)) ||
+	(vCount>=(ypos_mons_0-5) && vCount<=(ypos_mons_0-2) && hCount>=(xpos_mons_0+8) && hCount<=(xpos_mons_0+10)) ||
+	(vCount>=(ypos_mons_0+3) && vCount<=(ypos_mons_0+4) && hCount>=(xpos_mons_0+7) && hCount<=(xpos_mons_0+8)) ||
+	(vCount>=(ypos_mons_0+4) && vCount<=(ypos_mons_0+5) && hCount>=(xpos_mons_0+8) && hCount<=(xpos_mons_0+10)) || 
+	(vCount>=(ypos_mons_0-3) && vCount<=(ypos_mons_0-2) && hCount>=(xpos_mons_0-7) && hCount<=(xpos_mons_0-4)) ||
+	(vCount>=(ypos_mons_0-4) && vCount<=(ypos_mons_0-3) && hCount>=(xpos_mons_0-4) && hCount<=(xpos_mons_0-2)) ||
+	(vCount>=(ypos_mons_0-2) && vCount<=(ypos_mons_0) && hCount>=(xpos_mons_0-10) && hCount<=(xpos_mons_0-7)) ||
+	(vCount>=(ypos_mons_0-5) && vCount<=(ypos_mons_0-2) && hCount>=(xpos_mons_0-10) && hCount<=(xpos_mons_0-8)) ||
+	(vCount>=(ypos_mons_0+3) && vCount<=(ypos_mons_0+4) && hCount>=(xpos_mons_0-8) && hCount<=(xpos_mons_0-7)) ||
+	(vCount>=(ypos_mons_0+4) && vCount<=(ypos_mons_0+5) && hCount>=(xpos_mons_0-10) && hCount<=(xpos_mons_0-8));
+	
+	// assign monster_0 =vCount>=(ypos_mons_0 -5) && vCount<=(ypos_mons_0 +5) && hCount>=(xpos_mons_0 -10) && hCount<=(xpos_mons_0 +10);
 	assign monster_1 =vCount>=(ypos_mons_1 -5) && vCount<=(ypos_mons_1 +5) && hCount>=(xpos_mons_1 -10) && hCount<=(xpos_mons_1 +10);
 	assign monster_2 =vCount>=(ypos_mons_2 -5) && vCount<=(ypos_mons_2 +5) && hCount>=(xpos_mons_2 -10) && hCount<=(xpos_mons_2 +10);
 	assign monster_3 =vCount>=(ypos_mons_3 -5) && vCount<=(ypos_mons_3 +5) && hCount>=(xpos_mons_3 -10) && hCount<=(xpos_mons_3 +10);
@@ -398,6 +415,7 @@ module block_controller(
 				if( (xpos_mons_0_bullet_0 <= xpos_tank+10) && (xpos_mons_0_bullet_0 >= xpos_tank-10) && (ypos_mons_0_bullet_0 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_0_bullet_alive[1])
@@ -406,6 +424,7 @@ module block_controller(
 				if( (xpos_mons_0_bullet_1 <= xpos_tank+10) && (xpos_mons_0_bullet_1 >= xpos_tank-10) && (ypos_mons_0_bullet_1 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_0_bullet_alive[2])
@@ -414,6 +433,7 @@ module block_controller(
 				if( (xpos_mons_0_bullet_2 <= xpos_tank+10) && (xpos_mons_0_bullet_2 >= xpos_tank-10) && (ypos_mons_0_bullet_2 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			
@@ -424,6 +444,7 @@ module block_controller(
 				if( (xpos_mons_1_bullet_0 <= xpos_tank+10) && (xpos_mons_1_bullet_0 >= xpos_tank-10) && (ypos_mons_1_bullet_0 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_1_bullet_alive[1])
@@ -432,6 +453,7 @@ module block_controller(
 				if( (xpos_mons_1_bullet_1 <= xpos_tank+10) && (xpos_mons_1_bullet_1 >= xpos_tank-10) && (ypos_mons_1_bullet_1 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_1_bullet_alive[2])
@@ -440,6 +462,7 @@ module block_controller(
 				if( (xpos_mons_1_bullet_2 <= xpos_tank+10) && (xpos_mons_1_bullet_2 >= xpos_tank-10) && (ypos_mons_1_bullet_2 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			
@@ -450,6 +473,7 @@ module block_controller(
 				if( (xpos_mons_2_bullet_0 <= xpos_tank+10) && (xpos_mons_2_bullet_0 >= xpos_tank-10) && (ypos_mons_2_bullet_0 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_2_bullet_alive[1])
@@ -458,6 +482,7 @@ module block_controller(
 				if( (xpos_mons_2_bullet_1 <= xpos_tank+10) && (xpos_mons_2_bullet_1 >= xpos_tank-10) && (ypos_mons_2_bullet_1 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_2_bullet_alive[2])
@@ -466,6 +491,7 @@ module block_controller(
 				if( (xpos_mons_2_bullet_2 <= xpos_tank+10) && (xpos_mons_2_bullet_2 >= xpos_tank-10) && (ypos_mons_2_bullet_2 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			
@@ -476,6 +502,7 @@ module block_controller(
 				if( (xpos_mons_3_bullet_0 <= xpos_tank+10) && (xpos_mons_3_bullet_0 >= xpos_tank-10) && (ypos_mons_3_bullet_0 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_3_bullet_alive[1])
@@ -484,6 +511,7 @@ module block_controller(
 				if( (xpos_mons_3_bullet_1 <= xpos_tank+10) && (xpos_mons_3_bullet_1 >= xpos_tank-10) && (ypos_mons_3_bullet_1 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_3_bullet_alive[2])
@@ -492,6 +520,7 @@ module block_controller(
 				if( (xpos_mons_3_bullet_2 <= xpos_tank+10) && (xpos_mons_3_bullet_2 >= xpos_tank-10) && (ypos_mons_3_bullet_2 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			
@@ -502,6 +531,7 @@ module block_controller(
 				if( (xpos_mons_4_bullet_0 <= xpos_tank+10) && (xpos_mons_4_bullet_0 >= xpos_tank-10) && (ypos_mons_4_bullet_0 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_4_bullet_alive[1])
@@ -510,6 +540,7 @@ module block_controller(
 				if( (xpos_mons_4_bullet_1 <= xpos_tank+10) && (xpos_mons_4_bullet_1 >= xpos_tank-10) && (ypos_mons_4_bullet_1 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			if(mons_4_bullet_alive[2])
@@ -518,6 +549,7 @@ module block_controller(
 				if( (xpos_mons_4_bullet_2 <= xpos_tank+10) && (xpos_mons_4_bullet_2 >= xpos_tank-10) && (ypos_mons_4_bullet_2 == ypos_tank))
 				begin
 					tank_destroyed <= 1;
+					score <= 0;
 				end
 			end
 			

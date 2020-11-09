@@ -82,10 +82,12 @@ module space_monsters_sm(
                     end
                 SUCCESS:
                     begin
+                        score <= score_out;
                         if(clean_down) state <= START;
                     end
                 FAILED:
                     begin
+                        score <= score_out;
                         if(clean_down) state <= START;
                     end
             endcase
