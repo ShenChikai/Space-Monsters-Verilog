@@ -74,85 +74,109 @@ module block_controller(
 	parameter BLACK = 12'b0000_0000_0000;
 	parameter RED   = 12'b1111_0000_0000;
 	parameter GREEN = 12'b0000_1111_0000;
+	parameter EMERLD= 12'b0101_1101_0110; //(80, 220, 100)
 	parameter BLUE 	= 12'b0000_0000_1111;
 	parameter PURPLE= 12'b1111_0000_1111;
 	parameter CYAN  = 12'b0000_1111_1111;
-	parameter PINK  = 12'b1111_1100_1100;
+	parameter PINK  = 12'b1111_1001_1010;
+	parameter GREY  = 12'b1000_1000_1000;
+	parameter YELLOW= 12'b1111_1111_0000;
+	parameter GOLD 	= 12'b1111_1010_0000;
 	
 	always@ (*) begin
 		if(~bright)	//force black if not inside the display area
 			rgb = 12'b0000_0000_0000;
-		else if (monster_destroyed == 5'b11111)
+		else if (monster_destroyed == 5'b11111 && win_W)
 			rgb = CYAN;
-		else if (tank_destroyed)
+		else if (tank_destroyed && lose_L)
 			rgb = RED;
-		else if (tank_bullet_0)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && tank_bullet_0)
 			rgb = BLUE;
-		else if (tank_bullet_1)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && tank_bullet_1)
 			rgb = BLUE;
-		else if (tank_bullet_2)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && tank_bullet_2)
 			rgb = BLUE;
-		else if (tank_head)
-			rgb = GREEN;
-		else if (tank_body)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && tank_outter)
+			rgb = GREY;	
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && tank_body)
 			rgb = GREEN;	
-		else if (monster_0)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && mons_0_eye)
+			rgb = YELLOW;
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && mons_1_eye)
+			rgb = PINK;
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && mons_2_eye)
+			rgb = BLUE;
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && mons_3_eye)
+			rgb = GOLD;
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && mons_4_eye)
+			rgb = CYAN;
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_0)
 			rgb = RED;
-		else if (monster_1)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_1)
 			rgb = RED;
-		else if (monster_2)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_2)
 			rgb = RED;
-		else if (monster_3)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_3)
 			rgb = RED;
-		else if (monster_4)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_4)
 			rgb = RED;
-		else if (monster_0_dark)
-			rgb = background;
-		else if (monster_0_bullet_0)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_0_bullet_0)
 			rgb = RED;
-		else if (monster_0_bullet_1)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_0_bullet_1)
 			rgb = RED;
-		else if (monster_0_bullet_2)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_0_bullet_2)
 			rgb = RED;
-		else if (monster_1_bullet_0)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_1_bullet_0)
 			rgb = RED;
-		else if (monster_1_bullet_1)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_1_bullet_1)
 			rgb = RED;
-		else if (monster_1_bullet_2)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_1_bullet_2)
 			rgb = RED;
-		else if (monster_2_bullet_0)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_2_bullet_0)
 			rgb = RED;
-		else if (monster_2_bullet_1)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_2_bullet_1)
 			rgb = RED;
-		else if (monster_2_bullet_2)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_2_bullet_2)
 			rgb = RED;
-		else if (monster_3_bullet_0)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_3_bullet_0)
 			rgb = RED;
-		else if (monster_3_bullet_1)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_3_bullet_1)
 			rgb = RED;
-		else if (monster_3_bullet_2)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_3_bullet_2)
 			rgb = RED;
-		else if (monster_4_bullet_0)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_4_bullet_0)
 			rgb = RED;
-		else if (monster_4_bullet_1)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_4_bullet_1)
 			rgb = RED;
-		else if (monster_4_bullet_2)
+		else if (~tank_destroyed && monster_destroyed != 5'b11111 && monster_4_bullet_2)
 			rgb = RED;
 		else
 			rgb = background;
 	end
 	
 	// -------------------------------------------------------------------------------------Draw_Shape_in_Pixel--------------------------------------------------------------------------------------
+	// win \ lose
+	assign lose_L = vCount>=(35+60) && vCount<=(35+420) && hCount>=(144+230) && hCount<=(144+300) ||
+					vCount>=(35+350) && vCount<=(35+420) && hCount>=(144+230) && hCount<=(144+470);
+	assign win_W = vCount>=(35+390) && vCount<=(35+450) && hCount>=(94+175) && hCount<=(94+500) ||
+					vCount>=(35+90) && vCount<=(35+390) && hCount>=(94+175) && hCount<=(94+240) ||
+					vCount>=(35+90) && vCount<=(35+390) && hCount>=(94+305) && hCount<=(94+370) ||
+					vCount>=(35+90) && vCount<=(35+390) && hCount>=(94+435) && hCount<=(94+500);
+	
 	// draw tank
-	assign tank_head =vCount>=(ypos_tank-5) && vCount< (ypos_tank) && hCount>=(xpos_tank-2) && hCount<=(xpos_tank+2);
-	assign tank_body =vCount>=(ypos_tank) && vCount<=(ypos_tank+10) && hCount>=(xpos_tank-10) && hCount<=(xpos_tank+10);
+	assign tank_body = vCount>=(ypos_tank-6) && vCount<=(ypos_tank+6) && hCount>=(xpos_tank-6) && hCount<=(xpos_tank+6);
+	assign tank_outter = vCount>=(ypos_tank-10) && vCount<=(ypos_tank+10) && hCount>=(xpos_tank-9) && hCount<=(xpos_tank-6) ||
+						vCount>=(ypos_tank-10) && vCount<=(ypos_tank+10) && hCount>=(xpos_tank+6) && hCount<=(xpos_tank+9) ||
+						vCount>=(ypos_tank-18) && vCount<=(ypos_tank) && hCount>=(xpos_tank-1) && hCount<=(xpos_tank+1);
+						
 	// draw tank bullets
 	assign tank_bullet_0 =vCount>=(ypos_tank_bullet_0 -1) && vCount<=(ypos_tank_bullet_0 +1) && hCount>=(xpos_tank_bullet_0 -1) && hCount<=(xpos_tank_bullet_0 +1);
 	assign tank_bullet_1 =vCount>=(ypos_tank_bullet_1 -1) && vCount<=(ypos_tank_bullet_1 +1) && hCount>=(xpos_tank_bullet_1 -1) && hCount<=(xpos_tank_bullet_1 +1);
 	assign tank_bullet_2 =vCount>=(ypos_tank_bullet_2 -1) && vCount<=(ypos_tank_bullet_2 +1) && hCount>=(xpos_tank_bullet_2 -1) && hCount<=(xpos_tank_bullet_2 +1);
-	// draw monsters
-	assign monster_0_dark = (vCount>=(ypos_mons_0+3) && vCount<=(ypos_mons_0+5) && hCount>=(xpos_mons_0) && hCount<=(xpos_mons_0+2)) || 
-	(vCount>=(ypos_mons_0-5) && vCount<=(ypos_mons_0-3) && hCount>=(xpos_mons_0) && hCount<=(xpos_mons_0+2));
+	
+	// draw monsters_0
+	assign mons_0_eye = (vCount>=(ypos_mons_0-2) && vCount<=(ypos_mons_0) && hCount>=(xpos_mons_0-5) && hCount<=(xpos_mons_0-3)) || 
+	(vCount>=(ypos_mons_0-2) && vCount<=(ypos_mons_0) && hCount>=(xpos_mons_0+3) && hCount<=(xpos_mons_0+5));
 	assign monster_0 = (vCount>=(ypos_mons_0-2) && vCount<=(ypos_mons_0+3) && hCount>=(xpos_mons_0-7) && hCount<=(xpos_mons_0+7)) || (vCount>=(ypos_mons_0-3) && vCount<=(ypos_mons_0-2) && hCount>=(xpos_mons_0+4) && hCount<=(xpos_mons_0+7)) ||
 	(vCount>=(ypos_mons_0-4) && vCount<=(ypos_mons_0-3) && hCount>=(xpos_mons_0+2) && hCount<=(xpos_mons_0+4)) ||
 	(vCount>=(ypos_mons_0-2) && vCount<=(ypos_mons_0) && hCount>=(xpos_mons_0+7) && hCount<=(xpos_mons_0+10)) ||
@@ -166,11 +190,70 @@ module block_controller(
 	(vCount>=(ypos_mons_0+3) && vCount<=(ypos_mons_0+4) && hCount>=(xpos_mons_0-8) && hCount<=(xpos_mons_0-7)) ||
 	(vCount>=(ypos_mons_0+4) && vCount<=(ypos_mons_0+5) && hCount>=(xpos_mons_0-10) && hCount<=(xpos_mons_0-8));
 	
-	// assign monster_0 =vCount>=(ypos_mons_0 -5) && vCount<=(ypos_mons_0 +5) && hCount>=(xpos_mons_0 -10) && hCount<=(xpos_mons_0 +10);
-	assign monster_1 =vCount>=(ypos_mons_1 -5) && vCount<=(ypos_mons_1 +5) && hCount>=(xpos_mons_1 -10) && hCount<=(xpos_mons_1 +10);
-	assign monster_2 =vCount>=(ypos_mons_2 -5) && vCount<=(ypos_mons_2 +5) && hCount>=(xpos_mons_2 -10) && hCount<=(xpos_mons_2 +10);
-	assign monster_3 =vCount>=(ypos_mons_3 -5) && vCount<=(ypos_mons_3 +5) && hCount>=(xpos_mons_3 -10) && hCount<=(xpos_mons_3 +10);
-	assign monster_4 =vCount>=(ypos_mons_4 -5) && vCount<=(ypos_mons_4 +5) && hCount>=(xpos_mons_4 -10) && hCount<=(xpos_mons_4 +10);
+	// draw monsters_1
+	assign mons_1_eye = (vCount>=(ypos_mons_1-2) && vCount<=(ypos_mons_1) && hCount>=(xpos_mons_1-5) && hCount<=(xpos_mons_1-3)) || 
+	(vCount>=(ypos_mons_1-2) && vCount<=(ypos_mons_1) && hCount>=(xpos_mons_1+3) && hCount<=(xpos_mons_1+5));
+	assign monster_1 = (vCount>=(ypos_mons_1-2) && vCount<=(ypos_mons_1+3) && hCount>=(xpos_mons_1-7) && hCount<=(xpos_mons_1+7)) || (vCount>=(ypos_mons_1-3) && vCount<=(ypos_mons_1-2) && hCount>=(xpos_mons_1+4) && hCount<=(xpos_mons_1+7)) ||
+	(vCount>=(ypos_mons_1-4) && vCount<=(ypos_mons_1-3) && hCount>=(xpos_mons_1+2) && hCount<=(xpos_mons_1+4)) ||
+	(vCount>=(ypos_mons_1-2) && vCount<=(ypos_mons_1) && hCount>=(xpos_mons_1+7) && hCount<=(xpos_mons_1+10)) ||
+	(vCount>=(ypos_mons_1-5) && vCount<=(ypos_mons_1-2) && hCount>=(xpos_mons_1+8) && hCount<=(xpos_mons_1+10)) ||
+	(vCount>=(ypos_mons_1+3) && vCount<=(ypos_mons_1+4) && hCount>=(xpos_mons_1+7) && hCount<=(xpos_mons_1+8)) ||
+	(vCount>=(ypos_mons_1+4) && vCount<=(ypos_mons_1+5) && hCount>=(xpos_mons_1+8) && hCount<=(xpos_mons_1+10)) || 
+	(vCount>=(ypos_mons_1-3) && vCount<=(ypos_mons_1-2) && hCount>=(xpos_mons_1-7) && hCount<=(xpos_mons_1-4)) ||
+	(vCount>=(ypos_mons_1-4) && vCount<=(ypos_mons_1-3) && hCount>=(xpos_mons_1-4) && hCount<=(xpos_mons_1-2)) ||
+	(vCount>=(ypos_mons_1-2) && vCount<=(ypos_mons_1) && hCount>=(xpos_mons_1-10) && hCount<=(xpos_mons_1-7)) ||
+	(vCount>=(ypos_mons_1-5) && vCount<=(ypos_mons_1-2) && hCount>=(xpos_mons_1-10) && hCount<=(xpos_mons_1-8)) ||
+	(vCount>=(ypos_mons_1+3) && vCount<=(ypos_mons_1+4) && hCount>=(xpos_mons_1-8) && hCount<=(xpos_mons_1-7)) ||
+	(vCount>=(ypos_mons_1+4) && vCount<=(ypos_mons_1+5) && hCount>=(xpos_mons_1-10) && hCount<=(xpos_mons_1-8));
+	
+	// draw monsters_2
+	assign mons_2_eye = (vCount>=(ypos_mons_2-2) && vCount<=(ypos_mons_2) && hCount>=(xpos_mons_2-5) && hCount<=(xpos_mons_2-3)) || 
+	(vCount>=(ypos_mons_2-2) && vCount<=(ypos_mons_2) && hCount>=(xpos_mons_2+3) && hCount<=(xpos_mons_2+5));
+	assign monster_2 = (vCount>=(ypos_mons_2-2) && vCount<=(ypos_mons_2+3) && hCount>=(xpos_mons_2-7) && hCount<=(xpos_mons_2+7)) || (vCount>=(ypos_mons_2-3) && vCount<=(ypos_mons_2-2) && hCount>=(xpos_mons_2+4) && hCount<=(xpos_mons_2+7)) ||
+	(vCount>=(ypos_mons_2-4) && vCount<=(ypos_mons_2-3) && hCount>=(xpos_mons_2+2) && hCount<=(xpos_mons_2+4)) ||
+	(vCount>=(ypos_mons_2-2) && vCount<=(ypos_mons_2) && hCount>=(xpos_mons_2+7) && hCount<=(xpos_mons_2+10)) ||
+	(vCount>=(ypos_mons_2-5) && vCount<=(ypos_mons_2-2) && hCount>=(xpos_mons_2+8) && hCount<=(xpos_mons_2+10)) ||
+	(vCount>=(ypos_mons_2+3) && vCount<=(ypos_mons_2+4) && hCount>=(xpos_mons_2+7) && hCount<=(xpos_mons_2+8)) ||
+	(vCount>=(ypos_mons_2+4) && vCount<=(ypos_mons_2+5) && hCount>=(xpos_mons_2+8) && hCount<=(xpos_mons_2+10)) || 
+	(vCount>=(ypos_mons_2-3) && vCount<=(ypos_mons_2-2) && hCount>=(xpos_mons_2-7) && hCount<=(xpos_mons_2-4)) ||
+	(vCount>=(ypos_mons_2-4) && vCount<=(ypos_mons_2-3) && hCount>=(xpos_mons_2-4) && hCount<=(xpos_mons_2-2)) ||
+	(vCount>=(ypos_mons_2-2) && vCount<=(ypos_mons_2) && hCount>=(xpos_mons_2-10) && hCount<=(xpos_mons_2-7)) ||
+	(vCount>=(ypos_mons_2-5) && vCount<=(ypos_mons_2-2) && hCount>=(xpos_mons_2-10) && hCount<=(xpos_mons_2-8)) ||
+	(vCount>=(ypos_mons_2+3) && vCount<=(ypos_mons_2+4) && hCount>=(xpos_mons_2-8) && hCount<=(xpos_mons_2-7)) ||
+	(vCount>=(ypos_mons_2+4) && vCount<=(ypos_mons_2+5) && hCount>=(xpos_mons_2-10) && hCount<=(xpos_mons_2-8));
+	
+	// draw monsters_3
+	assign mons_3_eye = (vCount>=(ypos_mons_3-2) && vCount<=(ypos_mons_3) && hCount>=(xpos_mons_3-5) && hCount<=(xpos_mons_3-3)) || 
+	(vCount>=(ypos_mons_3-2) && vCount<=(ypos_mons_3) && hCount>=(xpos_mons_3+3) && hCount<=(xpos_mons_3+5));
+	assign monster_3 = (vCount>=(ypos_mons_3-2) && vCount<=(ypos_mons_3+3) && hCount>=(xpos_mons_3-7) && hCount<=(xpos_mons_3+7)) || (vCount>=(ypos_mons_3-3) && vCount<=(ypos_mons_3-2) && hCount>=(xpos_mons_3+4) && hCount<=(xpos_mons_3+7)) ||
+	(vCount>=(ypos_mons_3-4) && vCount<=(ypos_mons_3-3) && hCount>=(xpos_mons_3+2) && hCount<=(xpos_mons_3+4)) ||
+	(vCount>=(ypos_mons_3-2) && vCount<=(ypos_mons_3) && hCount>=(xpos_mons_3+7) && hCount<=(xpos_mons_3+10)) ||
+	(vCount>=(ypos_mons_3-5) && vCount<=(ypos_mons_3-2) && hCount>=(xpos_mons_3+8) && hCount<=(xpos_mons_3+10)) ||
+	(vCount>=(ypos_mons_3+3) && vCount<=(ypos_mons_3+4) && hCount>=(xpos_mons_3+7) && hCount<=(xpos_mons_3+8)) ||
+	(vCount>=(ypos_mons_3+4) && vCount<=(ypos_mons_3+5) && hCount>=(xpos_mons_3+8) && hCount<=(xpos_mons_3+10)) || 
+	(vCount>=(ypos_mons_3-3) && vCount<=(ypos_mons_3-2) && hCount>=(xpos_mons_3-7) && hCount<=(xpos_mons_3-4)) ||
+	(vCount>=(ypos_mons_3-4) && vCount<=(ypos_mons_3-3) && hCount>=(xpos_mons_3-4) && hCount<=(xpos_mons_3-2)) ||
+	(vCount>=(ypos_mons_3-2) && vCount<=(ypos_mons_3) && hCount>=(xpos_mons_3-10) && hCount<=(xpos_mons_3-7)) ||
+	(vCount>=(ypos_mons_3-5) && vCount<=(ypos_mons_3-2) && hCount>=(xpos_mons_3-10) && hCount<=(xpos_mons_3-8)) ||
+	(vCount>=(ypos_mons_3+3) && vCount<=(ypos_mons_3+4) && hCount>=(xpos_mons_3-8) && hCount<=(xpos_mons_3-7)) ||
+	(vCount>=(ypos_mons_3+4) && vCount<=(ypos_mons_3+5) && hCount>=(xpos_mons_3-10) && hCount<=(xpos_mons_3-8));
+	
+	// draw monsters_4
+	assign mons_4_eye = (vCount>=(ypos_mons_4-2) && vCount<=(ypos_mons_4) && hCount>=(xpos_mons_4-5) && hCount<=(xpos_mons_4-3)) || 
+	(vCount>=(ypos_mons_4-2) && vCount<=(ypos_mons_4) && hCount>=(xpos_mons_4+3) && hCount<=(xpos_mons_4+5));
+	assign monster_4 = (vCount>=(ypos_mons_4-2) && vCount<=(ypos_mons_4+3) && hCount>=(xpos_mons_4-7) && hCount<=(xpos_mons_4+7)) || (vCount>=(ypos_mons_4-3) && vCount<=(ypos_mons_4-2) && hCount>=(xpos_mons_4+4) && hCount<=(xpos_mons_4+7)) ||
+	(vCount>=(ypos_mons_4-4) && vCount<=(ypos_mons_4-3) && hCount>=(xpos_mons_4+2) && hCount<=(xpos_mons_4+4)) ||
+	(vCount>=(ypos_mons_4-2) && vCount<=(ypos_mons_4) && hCount>=(xpos_mons_4+7) && hCount<=(xpos_mons_4+10)) ||
+	(vCount>=(ypos_mons_4-5) && vCount<=(ypos_mons_4-2) && hCount>=(xpos_mons_4+8) && hCount<=(xpos_mons_4+10)) ||
+	(vCount>=(ypos_mons_4+3) && vCount<=(ypos_mons_4+4) && hCount>=(xpos_mons_4+7) && hCount<=(xpos_mons_4+8)) ||
+	(vCount>=(ypos_mons_4+4) && vCount<=(ypos_mons_4+5) && hCount>=(xpos_mons_4+8) && hCount<=(xpos_mons_4+10)) || 
+	(vCount>=(ypos_mons_4-3) && vCount<=(ypos_mons_4-2) && hCount>=(xpos_mons_4-7) && hCount<=(xpos_mons_4-4)) ||
+	(vCount>=(ypos_mons_4-4) && vCount<=(ypos_mons_4-3) && hCount>=(xpos_mons_4-4) && hCount<=(xpos_mons_4-2)) ||
+	(vCount>=(ypos_mons_4-2) && vCount<=(ypos_mons_4) && hCount>=(xpos_mons_4-10) && hCount<=(xpos_mons_4-7)) ||
+	(vCount>=(ypos_mons_4-5) && vCount<=(ypos_mons_4-2) && hCount>=(xpos_mons_4-10) && hCount<=(xpos_mons_4-8)) ||
+	(vCount>=(ypos_mons_4+3) && vCount<=(ypos_mons_4+4) && hCount>=(xpos_mons_4-8) && hCount<=(xpos_mons_4-7)) ||
+	(vCount>=(ypos_mons_4+4) && vCount<=(ypos_mons_4+5) && hCount>=(xpos_mons_4-10) && hCount<=(xpos_mons_4-8));
+	
 	// draw monster bullets
 	assign monster_0_bullet_0 =vCount>=(ypos_mons_0_bullet_0 -1) && vCount<=(ypos_mons_0_bullet_0 +1) && hCount>=(xpos_mons_0_bullet_0 -1) && hCount<=(xpos_mons_0_bullet_0 +1);
 	assign monster_0_bullet_1 =vCount>=(ypos_mons_0_bullet_1 -1) && vCount<=(ypos_mons_0_bullet_1 +1) && hCount>=(xpos_mons_0_bullet_1 -1) && hCount<=(xpos_mons_0_bullet_1 +1);
