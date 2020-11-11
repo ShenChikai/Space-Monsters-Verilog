@@ -34,7 +34,7 @@ module vga_top(
 	assign Reset=BtnC;
 	wire bright;
 	wire[9:0] hc, vc;
-	wire[2:0] score;
+	wire[3:0] score;
 	wire up,down,left,right;
 	wire [3:0] anode;
 	wire [11:0] rgb;

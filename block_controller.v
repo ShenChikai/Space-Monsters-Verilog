@@ -11,7 +11,7 @@ module block_controller(
 	output reg [11:0] background,
 	output reg [4:0] monster_destroyed,
 	output reg tank_destroyed,
-	output reg [2:0] score
+	output reg [3:0] score
    );
    
 	// -------------------------------------------------------------------------------------Object_Variables(reg, wire)-----------------------------------------------------------------------------------

@@ -14,12 +14,12 @@ module space_monsters_sm(
     /** OUTPUTS  **/
     output wire [11:0] rgb;
     output wire [11:0] background;
-    output reg [2:0] score;
+    output reg [3:0] score;
 
 	wire [4:0] monster_destroyed;
     wire [11:0] rgb_out;
     wire [11:0] background_out;
-    wire [2:0] score_out;
+    wire [3:0] score_out;
 
     reg [6:0] state;
 
