@@ -1,5 +1,12 @@
 `timescale 1ns / 1ps
-
+//////////////////////////////////////////////////////////////////////////////////
+// EE354 Project - Space Monsters
+// Haomei Liu, Denny Shen
+// Nov 13, 2020
+// 
+// block_controller.v: receives input from state machine and controls specific objects
+//////////////////////////////////////////////////////////////////////////////////
+module display_controller(
 module block_controller(
 	input clk,
 	input bright,
@@ -12,8 +19,8 @@ module block_controller(
 	output reg [4:0] monster_destroyed,
 	output reg tank_destroyed,
 	output reg [3:0] score
-   );
-   
+);
+
 	// -------------------------------------------------------------------------------------Object_Variables(reg, wire)-----------------------------------------------------------------------------------
 	// display for all objects
 	wire tank_body, tank_head;

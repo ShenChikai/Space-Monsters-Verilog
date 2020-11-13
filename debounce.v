@@ -1,3 +1,11 @@
+//////////////////////////////////////////////////////////////////////////////////
+// EE354 Project - Space Monsters
+// Haomei Liu, Denny Shen
+// Nov 13, 2020
+// 
+// debounce.v: process button process, produce debounced signal (clean) and single step (single)
+//////////////////////////////////////////////////////////////////////////////////
+module display_controller(
 module debounce(rst, clk, btn_press, clean, single);
     input rst, clk;
     input btn_press;

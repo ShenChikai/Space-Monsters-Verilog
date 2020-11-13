@@ -1,18 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Create Date:    12:18:00 12/14/2017 
-// Module Name:    vga_top 
-// Revision: 
-// Revision 0.01 - File Created
-// Additional Comments: 
-//
-// Date: 04/04/2020
-// Author: Yue (Julien) Niu
-// Description: Port from NEXYS3 to NEXYS4
+// EE354 Project - Space Monsters
+// Haomei Liu, Denny Shen
+// Nov 13, 2020
 // 
-// 2020 Nov
-// Revised for final project
+// vga_top.v: top file
 //////////////////////////////////////////////////////////////////////////////////
+module display_controller(
 module vga_top(
 	input ClkPort,
 	input BtnC,
@@ -48,9 +42,9 @@ module vga_top(
 	reg [27:0]	DIV_CLK;
 	always @ (posedge ClkPort, posedge Reset)  
 	begin : CLOCK_DIVIDER
-      if (Reset)
+		if (Reset)
 			DIV_CLK <= 0;
-	  else
+		else
 			DIV_CLK <= DIV_CLK + 1'b1;
 	end
 	wire move_clk;

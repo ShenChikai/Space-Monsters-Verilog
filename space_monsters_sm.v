@@ -1,5 +1,12 @@
 `timescale 1ns / 1ps
-
+//////////////////////////////////////////////////////////////////////////////////
+// EE354 Project - Space Monsters
+// Haomei Liu, Denny Shen
+// Nov 13, 2020
+// 
+// space_monsters_sm.v: main state machine that handles the general flow of the game
+//////////////////////////////////////////////////////////////////////////////////
+module display_controller(
 module space_monsters_sm(
     clk, bright, rst, left, right, up, down, hCount, vCount,
     rgb, background, score
